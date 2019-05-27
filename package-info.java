@@ -1,0 +1,8 @@
+/**
+ * 
+ */
+/**
+ * @author Nitram
+ *
+ */
+package lucene;
