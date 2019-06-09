@@ -1,6 +1,7 @@
 package com.winesearch.maven.winesearch;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,6 +27,8 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+
+import com.opencsv.CSVReader;
 
 /** Index all text files under a directory.
  * <p>
@@ -93,7 +96,7 @@ public class IndexFiles {
       // iwc.setRAMBufferSizeMB(256.0);
 
       IndexWriter writer = new IndexWriter(dir, iwc);
-      indexDocs(writer, docDir);
+      indexCSV(writer, docDir);
 
       // NOTE: if you want to maximize search performance,
       // you can optionally call forceMerge here.  This can be
@@ -188,11 +191,87 @@ public class IndexFiles {
        writer.updateDocument(new Term("path", file.toString()), doc);
      }
    }
-   
-   /*
-   static void indexCSV(final IndexWriter writer, Path path) {
-	   
-   }*/
-   
+  }
+ 
+ static void indexCSV (final IndexWriter writer, Path path) throws IOException{
+	   CSVReader reader = new CSVReader(new FileReader("winemag-data-130k-v2.csv"));
+    String [] nextLine;
+    
+    int count = 0;
+    int words = 0;
+    
+    while ((nextLine = reader.readNext()) != null) {
+       // nextLine[] is an array of values from the line
+       //System.out.println(nextLine[0] + " " + nextLine[1] + " " + nextLine[2] + " " + nextLine[3] + " " + nextLine[4] +nextLine[5] + nextLine[6] + " " + nextLine[7] + " " + nextLine[8]);
+    	System.out.println(nextLine[2] + " " + nextLine[2].split(" ").length);
+    	count = count + 1;
+    	words = words + nextLine[2].split(" ").length;
+    	
+    	 // make a new, empty document
+        Document doc = new Document();
+        
+        // ID 
+        Field idField = new StringField("ID", nextLine[0], Field.Store.YES);
+        doc.add(idField);
+        
+        // Country
+        Field countryField = new StringField("country", nextLine[1], Field.Store.YES);
+        doc.add(countryField);
+        
+        // Description
+        Field descField = new TextField("decsription", nextLine[2], Field.Store.YES);
+        doc.add(descField);
+        
+        // Designation
+        Field designationField = new StringField("designation", nextLine[3], Field.Store.YES);
+        doc.add(designationField);
+        
+        // Points
+        Field pointField = new StringField("price", nextLine[4], Field.Store.YES);
+        doc.add(pointField);
+        
+        // Price
+        Field priceField = new StringField("price", nextLine[5], Field.Store.YES);
+        doc.add(priceField);
+        
+        // Province
+        Field provinceField = new StringField("province", nextLine[6], Field.Store.YES);
+        doc.add(provinceField);
+        
+        // Taster
+        Field tasterField = new StringField("taster", nextLine[9], Field.Store.YES);
+        doc.add(tasterField);
+        
+        // Title
+        Field titleField = new StringField("title", nextLine[11], Field.Store.YES);
+        doc.add(titleField);
+        
+        // Variety
+        Field varietyField = new StringField("variety", nextLine[12], Field.Store.YES);
+        doc.add(varietyField);
+        
+        // Winery
+        Field wineryField = new StringField("Points", nextLine[13], Field.Store.YES);
+        doc.add(wineryField);
+        
+        
+        if (writer.getConfig().getOpenMode() == OpenMode.CREATE) {
+            // New index, so we just add the document (no old document can be there):
+            System.out.println("adding ID" + nextLine[0]);
+            writer.addDocument(doc);
+          } else {
+            // Existing index (an old copy of this document may have been indexed) so 
+            // we use updateDocument instead to replace the old one matching the exact 
+            // path, if present:
+            System.out.println("updating ID" + nextLine[0]);
+            //writer.updateDocument(new Term("path", file.toString()), doc);
+          }
+        
+        
+        
+        
+    }
+    reader.close();
+    System.out.println("Average Description Length: " + words/count);
 }
 }
