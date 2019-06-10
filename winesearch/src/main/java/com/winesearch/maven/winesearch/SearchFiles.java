@@ -83,7 +83,7 @@ public class SearchFiles {
     }
     
     //QueryParser parser = new QueryParser(field, analyzer);
-    //Use MultifielQueryParser, alternativ den new String in field auslagern
+    //Use MultifielQueryParser
     MultiFieldQueryParser parser = new MultiFieldQueryParser (new String[] {"id",
                                                                             "country",
                                                                             "description",
