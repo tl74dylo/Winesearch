@@ -14,6 +14,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;	//MultiFieldQueryParser importiert
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -80,7 +81,21 @@ public class SearchFiles {
     } else {
       in = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
     }
-    QueryParser parser = new QueryParser(field, analyzer);
+    
+    //QueryParser parser = new QueryParser(field, analyzer);
+    //Use MultifielQueryParser, alternativ den new String in field auslagern
+    MultiFieldQueryParser parser = new MultiFieldQueryParser (new String[] {"id",
+                                                                            "country",
+                                                                            "description",
+                                                                            "designation",
+                                                                            "points",
+                                                                            "price",
+                                                                            "province",
+                                                                            "taster",
+                                                                            "title",
+                                                                            "variety",
+                                                                            "winery"}, analyzer);
+    
     while (true) {
       if (queries == null && queryString == null) {                        // prompt the user
         System.out.println("Enter query: ");
