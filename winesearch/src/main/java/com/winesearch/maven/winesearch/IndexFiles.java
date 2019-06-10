@@ -211,7 +211,7 @@ public class IndexFiles {
         Document doc = new Document();
         
         // ID 
-        Field idField = new StringField("ID", nextLine[0], Field.Store.YES);
+        Field idField = new StringField("id", nextLine[0], Field.Store.YES); //Zu lowercase geaendert fuer Konsistenz 
         doc.add(idField);
         
         // Country
@@ -219,7 +219,7 @@ public class IndexFiles {
         doc.add(countryField);
         
         // Description
-        Field descField = new TextField("decsription", nextLine[2], Field.Store.YES);
+        Field descField = new TextField("description", nextLine[2], Field.Store.YES); //Schreibfehler korrigiert
         doc.add(descField);
         
         // Designation
@@ -227,7 +227,7 @@ public class IndexFiles {
         doc.add(designationField);
         
         // Points
-        Field pointField = new StringField("price", nextLine[4], Field.Store.YES);
+        Field pointField = new StringField("points", nextLine[4], Field.Store.YES); //"price" zu "points" geaendert
         doc.add(pointField);
         
         // Price
@@ -251,7 +251,7 @@ public class IndexFiles {
         doc.add(varietyField);
         
         // Winery
-        Field wineryField = new StringField("Points", nextLine[13], Field.Store.YES);
+        Field wineryField = new StringField("winery", nextLine[13], Field.Store.YES); //"points" zu "winery" geaendert
         doc.add(wineryField);
         
         
