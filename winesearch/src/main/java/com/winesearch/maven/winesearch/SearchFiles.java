@@ -177,7 +177,7 @@ public class SearchFiles {
         }
 
         Document doc = searcher.doc(hits[i].doc);
-        String path = doc.get("path");
+        String path = doc.get("id");
         if (path != null) {
           System.out.println((i+1) + ". " + path);
           String title = doc.get("title");
