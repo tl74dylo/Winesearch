@@ -1,3 +1,9 @@
+//To do:
+//Popups / Tooltips for Results
+//Pages
+//Connectivity with Lucene
+//Rating System
+
 var app = angular.module("searchApp", []);
 var app2 = angular.module('PopupDemo', ['ui.bootstrap']);
  
