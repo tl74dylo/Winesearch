@@ -211,11 +211,11 @@ public class IndexFiles {
         Document doc = new Document();
         
         // ID 
-        Field idField = new StringField("id", nextLine[0], Field.Store.YES); //Zu lowercase geaendert fuer Konsistenz 
+        Field idField = new TextField("id", nextLine[0], Field.Store.YES); //Zu lowercase geaendert fuer Konsistenz 
         doc.add(idField);
         
         // Country
-        Field countryField = new StringField("country", nextLine[1], Field.Store.YES);
+        Field countryField = new TextField("country", nextLine[1], Field.Store.YES);
         doc.add(countryField);
         
         // Description
@@ -223,35 +223,35 @@ public class IndexFiles {
         doc.add(descField);
         
         // Designation
-        Field designationField = new StringField("designation", nextLine[3], Field.Store.YES);
+        Field designationField = new TextField("designation", nextLine[3], Field.Store.YES);
         doc.add(designationField);
         
         // Points
-        Field pointField = new StringField("points", nextLine[4], Field.Store.YES); //"price" zu "points" geaendert
+        Field pointField = new TextField("points", nextLine[4], Field.Store.YES); //"price" zu "points" geaendert
         doc.add(pointField);
         
         // Price
-        Field priceField = new StringField("price", nextLine[5], Field.Store.YES);
+        Field priceField = new TextField("price", nextLine[5], Field.Store.YES);
         doc.add(priceField);
         
         // Province
-        Field provinceField = new StringField("province", nextLine[6], Field.Store.YES);
+        Field provinceField = new TextField("province", nextLine[6], Field.Store.YES);
         doc.add(provinceField);
         
         // Taster
-        Field tasterField = new StringField("taster", nextLine[9], Field.Store.YES);
+        Field tasterField = new TextField("taster", nextLine[9], Field.Store.YES);
         doc.add(tasterField);
         
         // Title
-        Field titleField = new StringField("title", nextLine[11], Field.Store.YES);
+        Field titleField = new TextField("title", nextLine[11], Field.Store.YES);
         doc.add(titleField);
         
         // Variety
-        Field varietyField = new StringField("variety", nextLine[12], Field.Store.YES);
+        Field varietyField = new TextField("variety", nextLine[12], Field.Store.YES);
         doc.add(varietyField);
         
         // Winery
-        Field wineryField = new StringField("winery", nextLine[13], Field.Store.YES); //"points" zu "winery" geaendert
+        Field wineryField = new TextField("winery", nextLine[13], Field.Store.YES); //"points" zu "winery" geaendert
         doc.add(wineryField);
         
         
