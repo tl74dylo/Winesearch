@@ -1,0 +1,19 @@
+Getestet mit:
+Java 1.8 
+Eclipse IDE for Enterprise Java Developers.
+Version: 2019-03 (4.11.0)
+Build id: 20190314-1200
+
+
+Einrichten des Tomcat Servers und starten der Anwendung
+
+1. In Eclipse auf Window -> Show View -> Other -> Servers
+2. Im Servers Tab: rechts Klick -> New -> Server
+3. Im New Server Fenster: Link Configure runtime environments -> Apache Tomcat v8.5 -> Next -> Installations Directory von Tomcat wählen -> Finish
+4. Im New Server Fenster: Tomcat v8.5 Server wählen, host name: localhost, runtime environment Apache Tomcat v8.5 -> Next
+5. winesearch zu Configured hinzufügen ->Finish
+6. Im Server Tab sollte jetzt der Server zu sehen sein
+7. Rechts Klick auf Server und probeweise starten, dann mit rechts Klick stoppen
+8. Im Package Explorer (rechts wo ihr eure Projekte seht) rechts Klick auf winesearch Projekt Ordner (den aller obersten in der Hierarchie) -> Run As ... -> Run On Server -> Tomcat v8.5 -> Finish
+9. Jetzt sollte sich ein Browser Fenster öffnen, in dem ihr eine Query eingeben könnt
+
