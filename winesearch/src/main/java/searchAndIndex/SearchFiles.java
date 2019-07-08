@@ -22,27 +22,62 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 
+
 /** Simple command-line based search demo. */
 public class SearchFiles {
 
   private SearchFiles() {}
 
-  private void search(String query, PrintWriter writer) throws Exception{
-	  
-	  String index = "index";
-	    String field = "contents";
-	    String queries = null;
-	    int repeat = 0;
-	    boolean raw = false;
-	    String queryString = null;
-	    int hitsPerPage = 10;
-	  IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(index)));
-	    IndexSearcher searcher = new IndexSearcher(reader);
-	    Analyzer analyzer = new StandardAnalyzer();
-	  
-  }
+  public void searchIndexedFiles(PrintWriter writer, String queryString) throws Exception{
+	   
+	   // Pruefe, ob Eingabe gueltig und trim gleich die Eingabe
+	   if(queryString.length() == -1 || queryString == null || (queryString = queryString.trim()).length() == 0) {
+	   writer.println("Ungueltige Eingabe");
+	   return;
+	   }
+	   
+	   // Pruefe, ob gueltiger Index vorhanden ist
+	   String field = "contents";
+	   
+	   IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get("index")));
+	   IndexSearcher searcher = new IndexSearcher(reader);
+	   Analyzer analyzer = new StandardAnalyzer();
+	   
+	   // Fuehre Query aus
+	   MultiFieldQueryParser parser = new MultiFieldQueryParser(new String[] {"id","country", "description", "designation", "points", "price", "province", "taster", "title", "variety", "winery"}, analyzer);
+	   Query query = parser.parse(queryString);
+	   
+	   // Sammle die Dokumente
+	   TopDocs results = searcher.search(query, 50);
+	   ScoreDoc[] hits = results.scoreDocs;
+	   int numTotalHits = Math.toIntExact(results.totalHits.value);
+	   writer.println(numTotalHits + " passende Ergebnisse");
+	   
+	   // Durchlaufe Ergebnis (nur die ersten 50)
+	   for (int i= 0; i< 50; i++) {
+	   Document doc = searcher.doc(hits[i].doc);
+	         String path = doc.get("path");
+	         if (path != null) {
+	           writer.println((i+1) + ". " + path);
+	           String title = doc.get("title");
+	           if (title != null) {
+	          writer.println("Id: " + doc.get("id"));
+	             writer.println("   Title: " + doc.get("title"));
+	             writer.println("   Content: " + doc.get("description"));
+	           }
+	         } else {
+	           System.out.println((i+1) + ". " + "No path for this document");
+	         }
+	   }
+	   
+	   
+	   
+	  }
+  
+  
   
   /** Simple command-line based search demo. */
+  
   public static void main(String[] args) throws Exception {
     String usage =
       "Usage:\tjava lucene.SearchFiles [-index dir] [-field f] [-repeat n] [-queries file] [-query string] [-raw] [-paging hitsPerPage]\n\nSee http://lucene.apache.org/core/4_1_0/demo/ for details.";

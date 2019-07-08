@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -13,9 +15,15 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 import org.apache.lucene.document.LongPoint;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -41,12 +49,19 @@ public class IndexFiles {
 
   /** Index all text files under a directory. */
   public static void main(String[] args) {
+	  
+	  final String text = "The quick brown fox jumped over the lazy dogs.";
+
+
+	  
+	  
+	  
     String usage = "java org.apache.lucene.demo.IndexFiles"
                  + " [-index INDEX_PATH] [-docs DOCS_PATH] [-update]\n\n"
                  + "This indexes the documents in DOCS_PATH, creating a Lucene index"
                  + "in INDEX_PATH that can be searched with SearchFiles";
     String indexPath = "index";
-    String docsPath = "LuceneTestData/";
+    String docsPath = "";
     boolean create = true;
     for(int i=0;i<args.length;i++) {
       if ("-index".equals(args[i])) {
@@ -194,19 +209,26 @@ public class IndexFiles {
   }
  
  static void indexCSV (final IndexWriter writer, Path path) throws IOException{
-	   CSVReader reader = new CSVReader(new FileReader("winemag-data-130k-v2.csv"));
+	   CSVReader reader = new CSVReader(new FileReader("wineData.csv"));
     String [] nextLine;
     
     int count = 0;
     int words = 0;
+    Map<String, Integer> adjectivesMap = new HashMap<String, Integer>();
     
     while ((nextLine = reader.readNext()) != null) {
        // nextLine[] is an array of values from the line
        //System.out.println(nextLine[0] + " " + nextLine[1] + " " + nextLine[2] + " " + nextLine[3] + " " + nextLine[4] +nextLine[5] + nextLine[6] + " " + nextLine[7] + " " + nextLine[8]);
-    	System.out.println(nextLine[2] + " " + nextLine[2].split(" ").length);
+    	//System.out.println(nextLine[2] + " " + nextLine[2].split(" ").length);
     	count = count + 1;
     	words = words + nextLine[2].split(" ").length;
     	
+    	System.out.println(nextLine[0]);
+    	
+    	//Count adjectives
+    	updateAdjectives(nextLine[2], adjectivesMap);
+    	
+    	/*
     	 // make a new, empty document
         Document doc = new Document();
         
@@ -266,12 +288,72 @@ public class IndexFiles {
             System.out.println("updating ID" + nextLine[0]);
             //writer.updateDocument(new Term("path", file.toString()), doc);
           }
-        
+        */
         
         
         
     }
     reader.close();
     System.out.println("Average Description Length: " + words/count);
+    
+    System.out.println(adjectivesMap);
+    BufferedWriter bufWriter = new BufferedWriter(new FileWriter("Auswertung.csv"));
+    
+    for(Map.Entry<String, Integer> entry : adjectivesMap.entrySet()) {
+    	System.out.println(entry.getKey() + ": " + entry.getValue());
+    	
+    	
+    	bufWriter.write(entry.getKey() + ";" + entry.getValue() + "\n");
+    }
+    bufWriter.close();
 }
+ 
+ private static void updateAdjectives(String content, Map<String, Integer> map) {
+	  OpenNLPAnalyzer analyzer = new OpenNLPAnalyzer();
+
+	  // We're using a string reader to return a token stream. This allows us to observe the tokens
+	  // while they are being processed by our analyzer.
+	  TokenStream stream = analyzer.tokenStream("field", new StringReader(content));
+
+	  // CharTermAttribute will contain the actual token word
+	  CharTermAttribute termAtt = stream.addAttribute(CharTermAttribute.class);
+
+	  // TypeAttribute will contain the OpenNLP POS (Treebank II) tag
+	  TypeAttribute typeAtt = stream.addAttribute(TypeAttribute.class);
+
+	  try {
+	      stream.reset();
+
+	      // Print all tokens until stream is exhausted
+	      while (stream.incrementToken()) {
+	    	  //System.out.println(termAtt.toString() +" "+ typeAtt.type());
+	    	  if(typeAtt.type().equals( "JJ")) {
+	    		  String word = termAtt.toString();
+		    	  Integer count = 1;
+	    		  if(map.containsKey(word)) {
+		    		  count = map.get(word) + 1;  
+		    	  }
+		    	  map.put(word, count);
+	    	  } 
+	      }
+	      stream.end();
+
+	  }
+	  catch(Exception e) {
+		  System.out.println("Stream reset oder end hat nicht funktioniert");
+		  e.printStackTrace();
+	  }
+	  finally {
+		  try {
+			  stream.close();
+		  }
+		  catch(Exception e) {
+			  System.out.println("Stream konnte nicht geschlossen werden");
+			  e.printStackTrace();
+		  }
+	  }
+	  
+	  analyzer.close();
+ }
+
 }
