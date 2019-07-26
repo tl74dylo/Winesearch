@@ -2,6 +2,8 @@ package servlet;
 
 import searchAndIndex.*;
 
+import java.nio.file.Paths;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,13 +13,24 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Date;
 
+
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;	//MultiFieldQueryParser importiert
+
+import org.apache.lucene.search.highlight.Formatter;
+import org.apache.lucene.search.highlight.Fragmenter;
+import org.apache.lucene.search.highlight.Highlighter;
+import org.apache.lucene.search.highlight.QueryScorer;
+import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
+import org.apache.lucene.search.highlight.SimpleSpanFragmenter;
+import org.apache.lucene.search.highlight.TokenSources;
+
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -90,7 +103,20 @@ public class QueryServlet extends HttpServlet {
 		   int numTotalHits = Math.toIntExact(results.totalHits.value);
 		   writer.println(numTotalHits + " passende Ergebnisse");
 		   
-		   // Durchlaufe Ergebnis (nur die ersten 50)
+        //Uses HTML &lt;B&gt;&lt;/B&gt; tag to highlight the searched terms
+            Formatter formatter = new SimpleHTMLFormatter();
+        //used to markup highlighted terms found in the best sections of a text
+            Highlighter highlighter = new Highlighter(formatter, hits);
+        //It breaks text up into same-size texts but does not split up spans
+            Fragmenter fragmenter = new SimpleSpanFragmenter(hits, 10);
+        //breaks text up into same-size fragments with no concerns over spotting sentence boundaries.
+            Fragmenter fragmenter = new SimpleFragmenter(10);
+            highlighter.setTextFragmenter(fragmenter);
+            
+              
+            		   
+            
+// Durchlaufe Ergebnis (nur die ersten 50)
 		   for (int i= 0; i< 50; i++) {
 		   Document doc = searcher.doc(hits[i].doc);
 		         String path = doc.get("id");
@@ -102,15 +128,19 @@ public class QueryServlet extends HttpServlet {
 		             writer.println("   Title: " + doc.get("title"));
 		             writer.println("   Content: " + doc.get("description"));
 		             writer.println("\n");
-		           }
-		         } else {
+        TokenStream stream = TokenSources.getAnyTokenStream(reader, id, "description", analyzer);
+        String[] frags = highlighter.getBestFragments(stream, text, 10);
+        for (String frag : frags)
+        {
+            System.out.println(frag);
+        }
+	           }
+	             } else {
 		           System.out.println((i+1) + ". " + "No path for this document");
 		         }
 		   }
 		   
-		   
-		   
-		  }
+		   }
 	  
 
 }
