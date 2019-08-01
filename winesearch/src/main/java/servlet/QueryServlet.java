@@ -51,7 +51,7 @@ public class QueryServlet extends HttpServlet {
 		System.out.println(FSDirectory.open(Paths.get("index")));
 		PrintWriter writer = response.getWriter();
 		writer.println("Results for " + query);
-		//logge(query);
+		logge(query);
 		
 		
 		try {
