@@ -50,8 +50,8 @@ public class QueryServlet extends HttpServlet {
 		String query = request.getParameter("query");
 		System.out.println(FSDirectory.open(Paths.get("index")));
 		PrintWriter writer = response.getWriter();
-		writer.println("Hallo " + query);
-		
+		writer.println("Results for " + query);
+		//logge(query);
 		
 		
 		try {
@@ -111,6 +111,30 @@ public class QueryServlet extends HttpServlet {
 		   
 		   
 		  }
+	
+	private void logge(String anfrage) throws UnknownHostException {
+		PrintWriter writer = null;
+		Date date = new Date();
+		DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+		String datum = df.format(date);
+		String ipadress = java.net.InetAddress.getLocalHost().getHostAddress();
+		String query = anfrage;
+		
+		
+		File log = new File("logs/"+datum+".txt");
+		try {
+			writer = new PrintWriter(new BufferedWriter(new FileWriter(log, true)));
+			writer.println(ipadress+", "+query);
+			
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		} finally {
+			if (writer != null) {
+				writer.flush();
+				writer.close();
+			}
+		}
+	}
 	  
 
 }
