@@ -121,7 +121,7 @@ public class QueryServlet extends HttpServlet {
 		String query = anfrage;
 		
 		
-		File log = new File("logs/"+datum+".txt");
+		File log = new File(datum+".txt");
 		try {
 			writer = new PrintWriter(new BufferedWriter(new FileWriter(log, true)));
 			writer.println(ipadress+", "+query);
