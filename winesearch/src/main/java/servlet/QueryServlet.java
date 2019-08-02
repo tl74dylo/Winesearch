@@ -116,7 +116,9 @@ public class QueryServlet extends HttpServlet {
 		PrintWriter writer = null;
 		Date date = new Date();
 		DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+		DateFormat dt = new SimpleDateFormat("hh:mm:ss");
 		String datum = df.format(date);
+		String zeit = dt.format(date);
 		String ipadress = java.net.InetAddress.getLocalHost().getHostAddress();
 		String query = anfrage;
 		
@@ -124,7 +126,7 @@ public class QueryServlet extends HttpServlet {
 		File log = new File(datum+".txt");
 		try {
 			writer = new PrintWriter(new BufferedWriter(new FileWriter(log, true)));
-			writer.println(ipadress+", "+query);
+			writer.println(ipadress+", "+query+", "+zeit);
 			
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
