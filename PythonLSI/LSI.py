@@ -1,5 +1,6 @@
 #import modules
 import os.path
+import csv
 from gensim import corpora
 from gensim.models import LsiModel
 from nltk.tokenize import RegexpTokenizer
@@ -26,6 +27,13 @@ def load_data(path,file_name):
     titles.append( text[0:min(len(text),1000)] )
     return documents_list,titles
 
+def getFrequentTokens():
+    tokens = []
+    with open( os.path.join("", "FrequentTokens.txt") ,"r") as fin:
+        for line in fin.readlines():
+            text = line.strip()
+            tokens.extend(text.decode("utf-8").encode("ascii").split("\r"))
+    return tokens
 
 def preprocess_data(doc_set):
     """
@@ -42,6 +50,8 @@ def preprocess_data(doc_set):
     p_stemmer = PorterStemmer()
     # list for tokenized documents in loop
     texts = []
+    # frequent tokens
+    frequent_tokens = getFrequentTokens()
     # loop through document list
     for i in doc_set:
         # clean and tokenize document string
@@ -50,13 +60,13 @@ def preprocess_data(doc_set):
         # remove stop words from tokens
         stopped_tokens = [i for i in tokens if not i in en_stop]
         # stem tokens
-        stemmed_tokens = [p_stemmer.stem(i) for i in stopped_tokens]
-        # remove frequent tokens
-        #frequent_tokens = ['wine', 'acid', 'palat', 'aroma', 'tannin', 'note', 'spice']
+        stemmed_tokens = [p_stemmer.stem(i) for i in stopped_tokens if not i in frequent_tokens]
+        
         #token_selection = [i for i in stemmed_tokens if not i in frequent_tokens]
         # add tokens to list
         texts.append(stemmed_tokens)
     return texts
+
 
 def prepare_corpus(doc_clean):
     """
@@ -124,16 +134,22 @@ def plot_graph(doc_clean,start, stop, step):
     plt.savefig("Plot.png")
     plt.show()
 
-
+#array = getFrequentTokens()+['wine', 'acid', 'palate', 'aroma', 'tannin', 'note', 'spice']
+#print(array)
+#print(len(array))
 document_list,titles=load_data("","Reviews.txt")
 clean_text=preprocess_data(document_list)
 start,stop,step=2,12,1
 print("Plot")
 plot_graph(clean_text,start,stop,step)
-#number_of_topics=4
-#words=20
-#document_list,titles=load_data("","articles.txt")
-#clean_text=preprocess_data(document_list)
-#print("Fertig")
+number_of_topics=6
+words=20
+model_list = create_gensim_lsa_model(clean_text,number_of_topics,words)
+print("Fertig")
+
+
+
+
+
 
 
