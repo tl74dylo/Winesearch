@@ -3,13 +3,20 @@ package servlet;
 import searchAndIndex.*;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.InputStreamReader;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+import java.util.ArrayList;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -35,6 +42,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class QueryServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private int numOfResults = 0;
 
     /**
      * Default constructor. 
@@ -49,28 +57,34 @@ public class QueryServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String query = request.getParameter("query");
 		System.out.println(FSDirectory.open(Paths.get("index")));
-		PrintWriter writer = response.getWriter();
-		writer.println("Results for " + query);
+		//PrintWriter writer = response.getWriter();
 		logge(query);
-		
-		
+		 ArrayList<Document> resultsList = new ArrayList<Document>();
 		try {
-			searchIndexedFiles(writer, query);
+			//resultsList = searchIndexedFiles(writer, query);
+			resultsList = searchIndexedFiles(query);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
 		
-		writer.close();
+		//writer.close();
+		request.setAttribute("results", resultsList);
+		request.setAttribute("query", query);
+		request.setAttribute("resultCount", numOfResults);
+		request.getRequestDispatcher("results.jsp").forward(request, response);
+		response.sendRedirect("results.jsp");
 		
 	}
 	
-	public void searchIndexedFiles(PrintWriter writer, String queryString) throws Exception{
+	public ArrayList<Document> searchIndexedFiles( String queryString) throws Exception{
 		   
+		 ArrayList<Document> resultsList = new ArrayList<Document>();
+		
 		   // Pruefe, ob Eingabe gueltig und trim gleich die Eingabe
 		   if(queryString.length() == -1 || queryString == null || (queryString = queryString.trim()).length() == 0) {
-		   writer.println("Ungueltige Eingabe");
-		   return;
+		   //writer.println("Ungueltige Eingabe");
+		   return resultsList;
 		   }
 		   
 		   // Pruefe, ob gueltiger Index vorhanden ist
@@ -87,28 +101,32 @@ public class QueryServlet extends HttpServlet {
 		   // Sammle die Dokumente
 		   TopDocs results = searcher.search(query, 50);
 		   ScoreDoc[] hits = results.scoreDocs;
-		   int numTotalHits = Math.toIntExact(results.totalHits.value);
-		   writer.println(numTotalHits + " passende Ergebnisse");
+		   numOfResults = Math.toIntExact(results.totalHits.value);
+		   //writer.println(numTotalHits + " passende Ergebnisse");
+		   
+		  
 		   
 		   // Durchlaufe Ergebnis (nur die ersten 50)
 		   for (int i= 0; i< 50; i++) {
 		   Document doc = searcher.doc(hits[i].doc);
 		         String path = doc.get("id");
 		         if (path != null) {
-		           writer.println((i+1) + ". ");
+		           //writer.println((i+1) + ". ");
 		           String title = doc.get("title");
 		           if (title != null) {
-		          writer.println("Id: " + doc.get("id"));
-		             writer.println("   Title: " + doc.get("title"));
-		             writer.println("   Content: " + doc.get("description"));
-		             writer.println("\n");
+					/*
+					 * writer.println("Id: " + doc.get("id")); writer.println("   Title: " +
+					 * doc.get("title")); writer.println("   Content: " + doc.get("description"));
+					 * writer.println("\n");
+					 */
+		        	   resultsList.add(doc);
 		           }
 		         } else {
 		           System.out.println((i+1) + ". " + "No path for this document");
 		         }
 		   }
 		   
-		   
+		   return resultsList;
 		   
 		  }
 	
