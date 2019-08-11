@@ -73,7 +73,7 @@ public class QueryServlet extends HttpServlet {
 		request.setAttribute("query", query);
 		request.setAttribute("resultCount", numOfResults);
 		request.getRequestDispatcher("results.jsp").forward(request, response);
-		response.sendRedirect("results.jsp");
+		//response.sendRedirect("results.jsp");
 		
 	}
 	
