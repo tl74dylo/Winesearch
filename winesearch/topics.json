@@ -1,0 +1,8 @@
+[
+	{
+		"topic_id": "t42",
+		"query": "dry red",
+		"description":"Find dry red wines",
+		"narrative": "Just dry red wines are relevant."
+	}
+]
