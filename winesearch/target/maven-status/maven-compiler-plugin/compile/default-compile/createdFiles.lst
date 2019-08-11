@@ -1,3 +1,7 @@
-com/winesearch/maven/winesearch/IndexFiles.class
-com/winesearch/maven/winesearch/IndexFiles$1.class
-com/winesearch/maven/winesearch/App.class
+searchAndIndex/IndexFiles$1.class
+servlet/Result.class
+servlet/EvaluationServlet.class
+searchAndIndex/SearchFiles.class
+searchAndIndex/OpenNLPAnalyzer.class
+searchAndIndex/IndexFiles.class
+servlet/QueryServlet.class

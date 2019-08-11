@@ -1,2 +1,8 @@
-/Users/Nitram/eclipse-workspace/winesearch/src/main/java/com/winesearch/maven/winesearch/IndexFiles.java
-/Users/Nitram/eclipse-workspace/winesearch/src/main/java/com/winesearch/maven/winesearch/App.java
+/Users/Nitram/eclipse-workspace/winesearch/src/main/java/searchAndIndex/SearchFiles.java
+/Users/Nitram/eclipse-workspace/winesearch/src/main/java/servlet/QueryServlet.java
+/Users/Nitram/eclipse-workspace/winesearch/src/main/java/servlet/package-info.java
+/Users/Nitram/eclipse-workspace/winesearch/src/main/java/searchAndIndex/package-info.java
+/Users/Nitram/eclipse-workspace/winesearch/src/main/java/searchAndIndex/OpenNLPAnalyzer.java
+/Users/Nitram/eclipse-workspace/winesearch/src/main/java/searchAndIndex/IndexFiles.java
+/Users/Nitram/eclipse-workspace/winesearch/src/main/java/servlet/Result.java
+/Users/Nitram/eclipse-workspace/winesearch/src/main/java/servlet/EvaluationServlet.java

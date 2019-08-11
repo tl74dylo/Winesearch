@@ -95,6 +95,15 @@
     	<version>8.1.0</version>
 	</dependency>
 	
+	
+	<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-analyzers-opennlp -->
+	<dependency>
+	    <groupId>org.apache.lucene</groupId>
+	    <artifactId>lucene-analyzers-opennlp</artifactId>
+	    <version>8.1.0</version>
+	</dependency>
+
+	
 
    	<!-- https://mvnrepository.com/artifact/com.opencsv/opencsv -->
 	<dependency>
@@ -102,6 +111,16 @@
    		<artifactId>opencsv</artifactId>
    		<version>4.0</version>
 	</dependency>
+	
+	<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
+	<dependency>
+	    <groupId>com.googlecode.json-simple</groupId>
+	    <artifactId>json-simple</artifactId>
+	    <version>1.1.1</version>
+	</dependency>
+
+
+	
 
 
   </dependencies>
