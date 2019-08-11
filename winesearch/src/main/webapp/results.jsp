@@ -33,7 +33,13 @@
     for(Document result : results)
     {
     	String documentId = result.get("id");
+        if(query.contains(documentId)){
+    	
+        	out.print("Id: " + "<b>" + documentId + "</b>");
+        }else{
         out.print("Id: " + documentId);
+        
+        }
         
         out.print("<br/>");
        for(String wordneu : result.get("title").split(" ")){
