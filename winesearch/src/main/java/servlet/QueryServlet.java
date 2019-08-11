@@ -116,7 +116,8 @@ public class QueryServlet extends HttpServlet {
 		  
 		   
 		   // Durchlaufe Ergebnis (nur die ersten 50)
-		   for (int i= 0; i< 50; i++) {
+		try{  
+		for (int i= 0; i< 50; i++) {
 		   Document doc = searcher.doc(hits[i].doc);
 		         String path = doc.get("id");
 		         if (path != null) {
@@ -134,6 +135,8 @@ public class QueryServlet extends HttpServlet {
 		           System.out.println((i+1) + ". " + "No path for this document");
 		         }
 		   }
+		}catch (ArryIndexOutOfBoundsException aoe){
+		}
 		   
 		   return resultsList;
 		   
