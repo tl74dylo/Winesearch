@@ -6,6 +6,8 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.InputStreamReader;
@@ -14,6 +16,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -30,6 +34,10 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.apache.lucene.store.Directory;
 
 import javax.servlet.ServletException;
@@ -56,7 +64,10 @@ public class QueryServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String query = request.getParameter("query");
-		System.out.println(FSDirectory.open(Paths.get("index")));
+		String evalMode = request.getParameter("eval");
+		boolean eval = ((evalMode!= null) ? true: false);
+
+		
 		//PrintWriter writer = response.getWriter();
 		logge(query);
 		 ArrayList<Document> resultsList = new ArrayList<Document>();
@@ -68,12 +79,10 @@ public class QueryServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		//writer.close();
+		setupRequest(request, query, eval);
 		request.setAttribute("results", resultsList);
-		request.setAttribute("query", query);
-		request.setAttribute("resultCount", numOfResults);
 		request.getRequestDispatcher("results.jsp").forward(request, response);
-		//response.sendRedirect("results.jsp");
+		
 		
 	}
 	
@@ -129,6 +138,68 @@ public class QueryServlet extends HttpServlet {
 		   return resultsList;
 		   
 		  }
+	
+	
+	/* setupRequest
+	 * - setzt Attribute fuer request 
+	 * - abhängig ob Evaluierungsmodus aktiv ist 
+	 * - liest vorhandenes JSON Evaluierungsfile fuer Query aus, wenn vorhanden
+	 */
+	
+	private void setupRequest(HttpServletRequest request, String query, boolean eval) {
+		boolean fileExists = false;
+		// Pruefe im Evaluierungsmodus, ob es fuer diese Query schon ein passendes JSON Dokument gibt
+		if(eval){
+			String fileName = "Eval_" + query.replaceAll(" ", "_") + ".json";
+			fileExists = (new File(fileName)).exists();
+			
+			if(fileExists){
+				System.out.println("File exists");
+				request.setAttribute("control", parseEvaluationList(fileName));
+			}
+		}
+		
+		request.setAttribute("query", query);
+		request.setAttribute("eval", eval);
+		request.setAttribute("resultCount", numOfResults);
+	}
+	
+	
+	/*
+	 * parseEvaluationList: 
+	 * - liest aus Evaluation JSON Dokument die Relevanz dereinzelnen Ergebnisse aus
+	 */
+	private  Map<String, Integer> parseEvaluationList(String docPath){
+		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		JSONParser parser = new JSONParser(); 
+		 try (FileReader reader = new FileReader(docPath))
+	        {
+	            //Read JSON file
+	            Object obj = parser.parse(reader);
+	            
+	            
+	            JSONArray topics = (JSONArray) obj;
+	            System.out.println(topics);
+	            //Iterate over topics array
+	            for(Object topic : topics) {
+	            	JSONObject jsonTopic = (JSONObject) topic;
+	            	String docId = (String) jsonTopic.get("document_id");
+	            	System.out.println("Relevanz " + jsonTopic.get("relevance"));
+	        		int relevance = ((Long)jsonTopic.get("relevance")).intValue();
+	        		System.out.println("docId: " + docId + " relevance: " + relevance);
+	        		map.put(docId, relevance);
+	            }
+	            
+	        }
+		 catch (FileNotFoundException e) {
+	        e.printStackTrace();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    } catch (ParseException e) {
+	        e.printStackTrace();
+	    }
+		return map;
+	}
 	
 	private void logge(String anfrage) throws UnknownHostException {
 		PrintWriter writer = null;
