@@ -36,7 +36,17 @@
         out.print("Id: " + documentId);
         
         out.print("<br/>");
-        out.print("Title: " + result.get("title"));
+       for(String wordneu : result.get("title").split(" ")){
+        	if(query.contains(wordneu)){
+        		out.print("<b>" + wordneu + "</b>");
+        	}
+        	else{
+        		out.print(wordneu);
+        	}
+        	out.print(" ");
+        	
+        	
+         }
         out.print("<br/>");
         for(String word : result.get("description").split(" ")){
         	if(query.contains(word)){
