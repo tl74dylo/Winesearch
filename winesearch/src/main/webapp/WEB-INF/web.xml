@@ -10,9 +10,19 @@
   	<description></description>
   	<servlet-class>servlet.QueryServlet</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>EvaluationServlet</servlet-name>
+  	<display-name>EvaluationServlet</display-name>
+  	<description></description>
+  	<servlet-class>servlet.EvaluationServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
   	<servlet-name>QueryServlet</servlet-name>
   	<url-pattern>/QueryServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>EvaluationServlet</servlet-name>
+  	<url-pattern>/EvaluationServlet</url-pattern>
   </servlet-mapping>
 
 </web-app>
