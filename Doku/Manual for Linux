@@ -1,0 +1,15 @@
+Tested on Linux Mint 19.1 Cinnamon 4.0.10
+
+$sudo apt-get install java-8-sdk
+$sudo apt-get install mvn
+$sudo apt-get install tomcat9
+$sudo apt-get install update
+$sudo apt-get install upgrade
+$sudo apt autoremove
+$java -version should say something like jdk version "1.8.0_***"
+$mvn -version should say something like Apache Maven 3.6.*
+
+Copy the WAR file to CATALINA_HOME/webapps, e.g., /var/lib/tomcat9/webapps.
+$sudo mvn tomcat:deploy
+In the address area of the browser, type http://localhost:8080/winesearch/index.jsp and submit that address to the browser.
+The output of the JSP page will be displayed.
