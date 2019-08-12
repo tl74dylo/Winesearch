@@ -63,23 +63,26 @@ public class QueryServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String query = request.getParameter("query");
+		String query = request.getParameter("query").toLowerCase();
 		String evalMode = request.getParameter("eval");
 		boolean eval = ((evalMode!= null) ? true: false);
 
 		
 		//PrintWriter writer = response.getWriter();
 		logge(query);
+		System.out.println("geloggt");
+		String queryneu = check(query);
 		 ArrayList<Document> resultsList = new ArrayList<Document>();
 		try {
 			//resultsList = searchIndexedFiles(writer, query);
-			resultsList = searchIndexedFiles(query);
+			resultsList = searchIndexedFiles(queryneu);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
 		
-		setupRequest(request, query, eval);
+		Map <String, Integer> map = setupRequest(request, query, eval);
+		sort(resultsList, map);
 		request.setAttribute("results", resultsList);
 		request.getRequestDispatcher("results.jsp").forward(request, response);
 		
@@ -116,8 +119,8 @@ public class QueryServlet extends HttpServlet {
 		  
 		   
 		   // Durchlaufe Ergebnis (nur die ersten 50)
-		try{  
-		for (int i= 0; i< 50; i++) {
+		   try {
+		   for (int i= 0; i< 50; i++) {
 		   Document doc = searcher.doc(hits[i].doc);
 		         String path = doc.get("id");
 		         if (path != null) {
@@ -135,8 +138,13 @@ public class QueryServlet extends HttpServlet {
 		           System.out.println((i+1) + ". " + "No path for this document");
 		         }
 		   }
-		}catch (ArryIndexOutOfBoundsException aoe){
-		}
+		   
+		   } catch (ArrayIndexOutOfBoundsException aoe) {
+			   System.out.println("Keine weiteren Ergebnisse");
+		   }
+		   
+		   //Ergebnissortierung
+		   
 		   
 		   return resultsList;
 		   
@@ -149,22 +157,25 @@ public class QueryServlet extends HttpServlet {
 	 * - liest vorhandenes JSON Evaluierungsfile fuer Query aus, wenn vorhanden
 	 */
 	
-	private void setupRequest(HttpServletRequest request, String query, boolean eval) {
+	private Map <String, Integer> setupRequest(HttpServletRequest request, String query, boolean eval) {
 		boolean fileExists = false;
+		Map <String, Integer> relevance = null;
 		// Pruefe im Evaluierungsmodus, ob es fuer diese Query schon ein passendes JSON Dokument gibt
 		if(eval){
 			String fileName = "Eval_" + query.replaceAll(" ", "_") + ".json";
 			fileExists = (new File(fileName)).exists();
 			
 			if(fileExists){
+				relevance = parseEvaluationList(fileName);
 				System.out.println("File exists");
-				request.setAttribute("control", parseEvaluationList(fileName));
+				request.setAttribute("control", relevance);
 			}
 		}
 		
 		request.setAttribute("query", query);
 		request.setAttribute("eval", eval);
 		request.setAttribute("resultCount", numOfResults);
+		return relevance;
 	}
 	
 	
@@ -228,6 +239,117 @@ public class QueryServlet extends HttpServlet {
 				writer.close();
 			}
 		}
+	}
+	
+	private String check(String query) {	//Vorverarbeitungsfunktion fuer Queries
+		StringBuilder sb = new StringBuilder();
+		String [] queryarr = query.split(" ");	//splittet die Query
+		
+		
+		//checks if vintage is requested
+		int vintage = 0;					//Kenngroesse fuer doppelvorkommen von woertern
+			if (queryarr.length>1) {		//iteriert über jedes Wort der Query, falls query laenger als 1 (da Vintage ein Jahr braucht)
+				for (int j = 0; j<queryarr.length; j++) {
+				/*if (queryarr[queryarr.length-1].equals("vintage") && vintage == 0){	//check ob das letzte Wort == vintage und Kenngroesse noch 0
+					for (int k = 0; k<(queryarr.length-1); k++) {
+						
+						try {
+							int zahl = Integer.parseInt(queryarr[k]);	//falls wort == zahl, erfolg
+							if (zahl > 1900 && zahl < 2100) {	
+							sb.append("title:");						//falls im Zeitraum, neue Query einfuegen
+							sb.append(queryarr[k]+" ");
+							}
+						} catch (NumberFormatException nfe) {			//falls keine Zahl, wort zur neuen Query hinzufuegen
+							sb.append(queryarr[k]+" ");
+						}
+						
+					}
+					vintage = 1;
+				} else */ if (vintage != 1 && queryarr[j].equals("vintage")) {
+					for (int l = 0; l<j; l++) {
+						try {
+							int zahl = Integer.parseInt(queryarr[l]);
+							if (zahl > 1900 && zahl < 2100) {
+							sb.append("title:");
+							sb.append(queryarr[l]+" ");
+							}
+						} catch (NumberFormatException nfe) {
+							sb.append(queryarr[l]+" ");
+						}
+					}
+					sb.append("vintage ");
+					for(int l = j+1; l<queryarr.length; l++) {
+						try {
+							int zahl = Integer.parseInt(queryarr[l]);
+							if (zahl > 1900 && zahl < 2100) {
+								sb.append("title:");
+								sb.append(queryarr[l]+" ");
+								}
+						} catch (NumberFormatException nfe) {
+							sb.append(queryarr[l]+" ");
+						}
+					}
+					vintage = 1;
+				  }
+				
+				}
+				
+			} 
+			if (sb.length() == 0){
+			sb.append(query);
+			}
+		
+		//checks if only red or white wine is requested
+				int type = 0;
+		for (int i=0; i<queryarr.length; i++) {
+			if (queryarr[i].equals("red") || queryarr[i].equals("rouge")) {
+				if (type != 1) {
+				type += 1;
+				}
+			} else if (queryarr[i].equals("blanc") || queryarr[i].equals("white")) {
+				if (type != 2) {
+					type += 2;
+				}
+			}
+		}
+		
+		
+		if (type == 1) {
+			sb.append(" -blanc");
+			sb.append(" -white");
+		} else if (type == 2 ){
+			sb.append(" -red");
+			sb.append(" -rouge");
+		}
+		
+		
+		
+		System.out.println(query +" (original)");
+		String queryneu = sb.toString();
+		System.out.println(queryneu+" (neu)");
+		return queryneu;
+	}
+	
+	private void sort(ArrayList<Document> resultList, Map<String, Integer> map){
+		HashMap<String, Integer> hashmap = (HashMap<String, Integer>)map;
+		int tausch = 0;
+		do {
+			tausch = 0;
+		try {
+		for (int i= 0; i<=50;i++){
+		if (hashmap.get(resultList.get(i).get("id")) < hashmap.get(resultList.get(i+1).get("id"))) {
+			Document temp = resultList.get(i);
+			resultList.set(i, resultList.get(i+1));
+			resultList.set((i+1), temp);
+			tausch = 1;
+				}
+			}
+		} catch (IndexOutOfBoundsException ioe) {
+			
+		} catch (NullPointerException npe) {
+			
+		}
+		} while (tausch == 1);
 	}
 	  
 

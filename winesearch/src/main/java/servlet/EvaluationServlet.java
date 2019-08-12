@@ -5,9 +5,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import org.json.simple.JSONObject;
+import org.apache.lucene.document.Document;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -70,7 +72,7 @@ public class EvaluationServlet extends HttpServlet {
 			fileWriter = new FileWriter("Eval_"+ query.replaceAll(" ", "_")+".json");
 			System.out.println("File erstellt");
 			
-		try {	
+			try {
 		    for(int i = 1; i<=50;i++) {
 		    	JSONObject obj = new JSONObject();
 		    	obj.put("topic_id", topicId);
@@ -82,15 +84,17 @@ public class EvaluationServlet extends HttpServlet {
 		    	catch(NumberFormatException e) {
 		    		e.printStackTrace();
 		    		System.out.println("Fehler beim Auslesen der Relevanz: Relevanz muss eine Zahl sein!");
-		    	}
-		    	catch(Exception e) {
+
+		    	} catch(Exception e) {
 		    		e.printStackTrace();
 		    	}
 		    	obj.put("relevance", relevance);
 		    	jsonArray.add(obj);
-		    	
-		    }
-		} catch (NullPointerException npe) {
+		    	}
+		    /*}
+		    catch (ArrayIndexOutOfBoundsException aoe) {
+			System.out.println("Array Index in file writing out of bounds");*/
+		    } catch (NullPointerException npe) {
 	    		System.out.println("Sorry, nicht mehr Ergebnisse da");
 	    	}
 		    fileWriter.write(jsonArray.toString());
@@ -99,6 +103,7 @@ public class EvaluationServlet extends HttpServlet {
 		}
 		catch(IOException e) {
 			e.printStackTrace();
+		
 		}
 		finally {
 			
