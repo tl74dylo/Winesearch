@@ -70,6 +70,7 @@ public class EvaluationServlet extends HttpServlet {
 			fileWriter = new FileWriter("Eval_"+ query.replaceAll(" ", "_")+".json");
 			System.out.println("File erstellt");
 			
+		try {	
 		    for(int i = 1; i<=50;i++) {
 		    	JSONObject obj = new JSONObject();
 		    	obj.put("topic_id", topicId);
@@ -89,6 +90,9 @@ public class EvaluationServlet extends HttpServlet {
 		    	jsonArray.add(obj);
 		    	
 		    }
+		} catch (NullPointerException npe) {
+	    		System.out.println("Sorry, nicht mehr Ergebnisse da");
+	    	}
 		    fileWriter.write(jsonArray.toString());
 		    fileWriter.flush();
 		    fileWriter.close();
