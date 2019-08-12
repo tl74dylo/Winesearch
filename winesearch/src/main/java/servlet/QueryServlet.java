@@ -119,8 +119,9 @@ public class QueryServlet extends HttpServlet {
 		  
 		   
 		   // Durchlaufe Ergebnis (nur die ersten 50)
-		   try {
-		   for (int i= 0; i< 50; i++) {
+		   
+		int count = (hits.length >= 50) ? 50 : hits.length;
+		   for (int i= 0; i< count; i++) {
 		   Document doc = searcher.doc(hits[i].doc);
 		         String path = doc.get("id");
 		         if (path != null) {
@@ -139,9 +140,6 @@ public class QueryServlet extends HttpServlet {
 		         }
 		   }
 		   
-		   } catch (ArrayIndexOutOfBoundsException aoe) {
-			   System.out.println("Keine weiteren Ergebnisse");
-		   }
 		   
 		   //Ergebnissortierung
 		   
@@ -153,7 +151,7 @@ public class QueryServlet extends HttpServlet {
 	
 	/* setupRequest
 	 * - setzt Attribute fuer request 
-	 * - abhängig ob Evaluierungsmodus aktiv ist 
+	 * - abhÃ¤ngig ob Evaluierungsmodus aktiv ist 
 	 * - liest vorhandenes JSON Evaluierungsfile fuer Query aus, wenn vorhanden
 	 */
 	
@@ -248,7 +246,7 @@ public class QueryServlet extends HttpServlet {
 		
 		//checks if vintage is requested
 		int vintage = 0;					//Kenngroesse fuer doppelvorkommen von woertern
-			if (queryarr.length>1) {		//iteriert �ber jedes Wort der Query, falls query laenger als 1 (da Vintage ein Jahr braucht)
+			if (queryarr.length>1) {		//iteriert über jedes Wort der Query, falls query laenger als 1 (da Vintage ein Jahr braucht)
 				for (int j = 0; j<queryarr.length; j++) {
 				/*if (queryarr[queryarr.length-1].equals("vintage") && vintage == 0){	//check ob das letzte Wort == vintage und Kenngroesse noch 0
 					for (int k = 0; k<(queryarr.length-1); k++) {
