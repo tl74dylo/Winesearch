@@ -7,6 +7,7 @@
 <%@page import="org.apache.lucene.document.Document"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="java.util.HashMap"%>
+<%@page import="org.apache.commons.lang3.StringUtils"%>
 
 
 <html>
