@@ -61,7 +61,7 @@
         out.print("</br>");
         for(String word : result.get("description").split(" ")){
         	
-        	if(query.contains(StringUtils.lowerCase(word))){
+        	if(query.contains(StringUtils.lowerCase(word).replace(",",""))){
         		out.print("<b>" + word + "</b>");
         	}
         	else{
