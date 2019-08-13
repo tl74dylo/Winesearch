@@ -510,6 +510,46 @@ public class QueryServlet extends HttpServlet {
 		return sb.toString();
 	}
 	
+	//prueft den Geschmack und die textur
+	
+	private String checktaste(String query) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(query+" ");
+		String queryarr[] = query.split(" ");
+		for (int i=0; i<queryarr.length; i++) {
+			switch(queryarr[i]) {
+				case "sweet":
+					sb.append("+description:sweet");
+					break;
+				case "fruity":
+					sb.append("+description:fruity");
+					break;
+				case "dry":
+					sb.append("+description:dry");
+					break;
+				case "berry":
+					sb.append("+description:berry");
+					break;
+				case "cherry":
+					sb.append("+description:cherry");
+					break;
+				case "citrus":
+					sb.append("+description:citrus");
+					break;
+				case "smooth":
+					sb.append("+description:smoth");
+					break;
+				case "rough":
+					sb.append("+description:rough");
+					break;
+				default:
+					break;
+			}
+		}
+		
+		return sb.toString();
+	}
+	
 	//checkt ob teuer/billig
 	private void checkprice (String query) {
 		price = 0;
