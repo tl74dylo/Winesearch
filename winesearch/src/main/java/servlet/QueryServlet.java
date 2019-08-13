@@ -259,12 +259,33 @@ public class QueryServlet extends HttpServlet {
 		queryneu = checkcountry(queryneu);
 		queryneu = checktaste(queryneu);
 		queryneu = checkfood(queryneu);
+		queryneu = checkrecommend(queryneu);
 		
 		System.out.println(query +" (original)");	
 		System.out.println(queryneu+" (neu)");
 		return queryneu;
 		
 	}
+	
+	//Vorverarbeitung fuer recommendations
+	
+	private String checkrecommend(String query) {
+		Date date = new Date();
+		DateFormat df = new SimpleDateFormat("yyyy");
+		String jahr = df.format(date);
+		int recommendations = 0;
+		String [] queryarr = query.split(" ");
+		StringBuilder sb = new StringBuilder();
+		sb.append(query);
+		for (int i=0; i<queryarr.length; i++) {
+			if(recommendations == 0 && queryarr[i].contains("recommend")) {
+				sb.append(" description:'drin from' description:'drin in' description:'drink now' description:'drink best after'"+" "+jahr);
+				recommendations = 1;
+			}
+		}
+		return sb.toString();
+	}
+	
 		//checks if vintage is requested
 	private String checkvintage(String query) {
 		String [] queryarr = query.split(" ");
