@@ -139,10 +139,7 @@ public class QueryServlet extends HttpServlet {
 		           System.out.println((i+1) + ". " + "No path for this document");
 		         }
 		   }
-		   
-		   
-		   //Ergebnissortierung
-		   
+
 		   
 		   return resultsList;
 		   
