@@ -7,9 +7,11 @@
 <%@page import="org.apache.lucene.document.Document"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="java.util.HashMap"%>
+<%@page import="org.apache.commons.lang3.StringUtils"%>
 
 <html>
 <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+
 <body>
 	
 	<% 
@@ -33,17 +35,17 @@
     for(Document result : results)
     {
     	String documentId = result.get("id");
-        if(query.contains(documentId)){
+    	if(query.contains(documentId)){
     	
         	out.print("Id: " + "<b>" + documentId + "</b>");
         }else{
         out.print("Id: " + documentId);
         
         }
-        
         out.print("<br/>");
-       for(String wordneu : result.get("title").split(" ")){
-        	if(query.contains(wordneu)){
+        out.print("<h2>");
+        for(String wordneu : result.get("title").split(" ")){
+        	if(query.contains(StringUtils.lowerCase(wordneu))){
         		out.print("<b>" + wordneu + "</b>");
         	}
         	else{
@@ -53,9 +55,13 @@
         	
         	
          }
-        out.print("<br/>");
+        out.print("</h2>");
+        out.print("<i>country:</i> "+result.get("country")+" &emsp;&emsp;&emsp;<i>price:</i> "+result.get("price")+"$"+" &emsp;&emsp;&emsp;<i>points(/100):</i> "+result.get("points"));
+        out.print("</br>");
+        out.print("</br>");
         for(String word : result.get("description").split(" ")){
-        	if(query.contains(word)){
+        	
+        	if(query.contains(StringUtils.lowerCase(word))){
         		out.print("<b>" + word + "</b>");
         	}
         	else{
@@ -65,6 +71,8 @@
         	
         	
          }
+         out.print("<br/>");
+         out.print("<br/>");
         // Zeige Segmented-Control nur im Evaluierungsmodus an
        
         if(eval){
