@@ -253,7 +253,8 @@ public class QueryServlet extends HttpServlet {
 	
 	private String check(String query) {	//Vorverarbeitungsfunktion fuer Queries		
 		checkprice(query);
-		String queryneu = checkvintage(query);
+		String queryneu = checkfrom(query);
+		queryneu = checkvintage(queryneu);
 		queryneu = checktype(queryneu);
 		queryneu = checkbest(queryneu);
 		queryneu = checkcountry(queryneu);
@@ -265,6 +266,33 @@ public class QueryServlet extends HttpServlet {
 		System.out.println(queryneu+" (neu)");
 		return queryneu;
 		
+	}
+	
+	private String checkfrom(String query) {
+		String [] queryarr = query.split(" ");
+		StringBuilder sb = new StringBuilder();
+		sb.append(query);
+		int test = 0;
+		int jahr = 0;
+		for (int i=0; i<queryarr.length; i++) {
+			try  {
+			jahr = Integer.parseInt(queryarr[i+1]);
+			} catch (NumberFormatException nfe) {
+				
+			} catch (ArrayIndexOutOfBoundsException aie) {
+				
+			}
+			if (jahr > 1900 && jahr < 2100) {
+				test = 1;
+			}
+			if (queryarr[i].contains("from") && test == 1) {
+				sb.append(" vintage");
+				return sb.toString();
+			}
+		}
+		
+		
+		return sb.toString();
 	}
 	
 	//Vorverarbeitung fuer recommendations
