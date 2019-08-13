@@ -405,17 +405,6 @@
 {
     "topic_id":"35",
     
-    "query":"organic white wine",
-    
-    "description":"Which white certified organic wines where tested?",
-    
-    "narrative":"Relevant documents include reviews which rate organic wine with a price up to 10$. This also includes public and private certification, e.g. demeter (Germany), Bio Hellas (Greece)"
-    
-},
-
-{
-    "topic_id":"36",
-    
     "query":"dry rosé",
     
     "description":"Which dry rosé wines were tested?",
@@ -425,7 +414,7 @@
 },
 
 {
-    "topic_id":"37",
+    "topic_id":"36",
     
     "query":"smooth fruity wines",
     
@@ -437,17 +426,6 @@
 
 {
     "topic_id":"37",
-    
-    "query":"smooth fruity wines",
-    
-    "description":"Which fruity wines with a smooth texture were tested?",
-    
-    "narrative":"Relevant documents include reviews which rate fruity wines with a smooth texture"
-    
-},
-
-{
-    "topic_id":"38",
     
     "query":"pricey red wines",
     
@@ -458,22 +436,22 @@
 },
 
 {
-    "topic_id":"39",
+    "topic_id":"38",
     
     "query":"everyday wine",
     
-    "description":"Which wines are good for everyday and informal occassion",
+    "description":"Which wines are good for everyday and informal occasion",
     
     "narrative":"Relevant documents include reviews which suggest a wine for a everyday / informal occassion."
     
 },
 
 {
-    "topic_id":"40",
+    "topic_id":"39",
     
-    "query":"vanison",
+    "query":"venison",
     
-    "description":"Which wines are good to have with vanison",
+    "description":"Which wines are good to have with venison",
     
     "narrative":"Relevant documents include reviews which suggest to drink this wine when eating vanison"
     
