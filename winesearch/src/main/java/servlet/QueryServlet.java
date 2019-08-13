@@ -258,6 +258,7 @@ public class QueryServlet extends HttpServlet {
 		queryneu = checkbest(queryneu);
 		queryneu = checkcountry(queryneu);
 		queryneu = checktaste(queryneu);
+		queryneu = checkfood(queryneu);
 		
 		System.out.println(query +" (original)");	
 		System.out.println(queryneu+" (neu)");
@@ -364,142 +365,142 @@ public class QueryServlet extends HttpServlet {
 		for (int i=0; i<queryarr.length; i++) {
 			switch(queryarr[i]) {
 				case "france":
-					sb.append("+country:france");
+					sb.append(" +country:france");
 					break;
 				case "french":
-					sb.append("+country:france");
+					sb.append(" +country:france");
 					break;
 				case "germany":
-					sb.append("+country:germany");
+					sb.append(" +country:germany");
 					break;
 				case "german":
-					sb.append("+country:germany");
+					sb.append(" +country:germany");
 					break;
 				case "america":
-					sb.append("+country:us");
+					sb.append(" +country:us");
 					break;
 				case "american":
-					sb.append("+country:us");
+					sb.append(" +country:us");
 					break;
 				case "us":
-					sb.append("+country:us");
+					sb.append(" +country:us");
 					break;
 				case "italy":
-					sb.append("+country:italy");
+					sb.append(" +country:italy");
 					break;
 				case "italian":
-					sb.append("+country:italy");
+					sb.append(" +country:italy");
 					break;
 				case "greece":
-					sb.append("+country:greece");
+					sb.append(" +country:greece");
 					break;
 				case "greek":
-					sb.append("+country:greece");
+					sb.append(" +country:greece");
 					break;
 				case "spain":
-					sb.append("+country:spain");
+					sb.append(" +country:spain");
 					break;
 				case "spanish":
-					sb.append("+country:spain");
+					sb.append(" +country:spain");
 					break;
 				case "mexico":
-					sb.append("+country:mexico");
+					sb.append(" +country:mexico");
 					break;
 				case "mexican":
-					sb.append("+country:mexico");
+					sb.append(" +country:mexico");
 					break;
 				case "australia":
-					sb.append("+country:australia");
+					sb.append(" +country:australia");
 					break;
 				case "australian":
-					sb.append("+country:australia");
+					sb.append(" +country:australia");
 					break;
 				case "austria":
-					sb.append("+country:austria");
+					sb.append(" +country:austria");
 					break;
 				case "austrian":
-					sb.append("+country:austria");
+					sb.append(" +country:austria");
 					break;
 				case "portugal":
-					sb.append("+country:portugal");
+					sb.append(" +country:portugal");
 					break;
 				case "portuguese":
-					sb.append("+country:portugal");
+					sb.append(" +country:portugal");
 					break;
 				case "argentina":
-					sb.append("+country:argentina");
+					sb.append(" +country:argentina");
 					break;
 				case "argentinean":
-					sb.append("+country:argentina");
+					sb.append(" +country:argentina");
 					break;
 				case "romania":
-					sb.append("+country:romania");
+					sb.append(" +country:romania");
 					break;
 				case "romanian":
-					sb.append("+country:romania");
+					sb.append(" +country:romania");
 					break;
 				case "england":
-					sb.append("+country:england");
+					sb.append(" +country:england");
 					break;
 				case "english":
-					sb.append("+country:england");
+					sb.append(" +country:england");
 					break;
 				case "georgia":
-					sb.append("+country:georgia");
+					sb.append(" +country:georgia");
 					break;
 				case "georgian":
-					sb.append("+country:georgia");
+					sb.append(" +country:georgia");
 					break;
 				case "canada":
-					sb.append("+country:canada");
+					sb.append(" +country:canada");
 					break;
 				case "canadian":
-					sb.append("+country:canada");
+					sb.append(" +country:canada");
 					break;
 				case "zealand":
-					sb.append("+country:zealand");
+					sb.append(" +country:zealand");
 					break;
 				case "africa":
-					sb.append("+country:africa");
+					sb.append(" +country:africa");
 					break;
 				case "african":
-					sb.append("+country:africa");
+					sb.append(" +country:africa");
 					break;
 				case "israel":
-					sb.append("+country:israel");
+					sb.append(" +country:israel");
 					break;
 				case "chile":
-					sb.append("+country:chile");
+					sb.append(" +country:chile");
 					break;
 				case "chilean":
-					sb.append("+country:chile");
+					sb.append(" +country:chile");
 					break;
 				case "bulgaria":
-					sb.append("+country:bulgaria");
+					sb.append(" +country:bulgaria");
 					break;
 				case "bulgarian":
-					sb.append("+country:bulgaria");
+					sb.append(" +country:bulgaria");
 					break;
 				case "moldova":
-					sb.append("+country:moldova");
+					sb.append(" +country:moldova");
 					break;
 				case "moldavian":
-					sb.append("+country:moldova");
+					sb.append(" +country:moldova");
 					break;
 				case "slovenia":
-					sb.append("+country:slovenia");
+					sb.append(" +country:slovenia");
 					break;
 				case "slovenian":
-					sb.append("+country:slovenia");
+					sb.append(" +country:slovenia");
 					break;
 				case "hungary":
-					sb.append("+country:hungary");
+					sb.append(" +country:hungary");
 					break;
 				case "hungarian":
-					sb.append("+country:hungary");
+					sb.append(" +country:hungary");
 					break;
 				case "cyprus":
-					sb.append("+country:cyprus");
+					sb.append(" +country:cyprus");
 					break;
 				default:
 					break;
@@ -510,37 +511,77 @@ public class QueryServlet extends HttpServlet {
 		return sb.toString();
 	}
 	
+	//prueft zu welchem essen der wein passt
+	
+	private String checkfood(String query) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(query);
+		String queryarr[] = query.split(" ");
+		for (int i=0; i<queryarr.length; i++) {
+			switch(queryarr[i]) {
+				case "seafood":
+					sb.append(" +description:seafood");
+					break;
+				case "pasta":
+					sb.append(" +description:pasta");
+					break;
+				case "venison":
+					sb.append(" +description:venison");
+					break;
+				case "cheese":
+					sb.append(" +description:cheese");
+					break;
+				case "clams":
+					sb.append(" +description:clams");
+					break;
+				case "tempranillo":
+					sb.append(" +description:tempranillo");
+					break;
+				case "meat":
+					sb.append(" +description:meat");
+					break;
+				case "organic":
+					sb.append(" +description:organic");
+					break;
+				default:
+					break;
+						
+			}
+		}
+		return sb.toString();
+	}
+	
 	//prueft den Geschmack und die textur
 	
 	private String checktaste(String query) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(query+" ");
+		sb.append(query);
 		String queryarr[] = query.split(" ");
 		for (int i=0; i<queryarr.length; i++) {
 			switch(queryarr[i]) {
 				case "sweet":
-					sb.append("+description:sweet");
+					sb.append(" +description:sweet");
 					break;
 				case "fruity":
-					sb.append("+description:fruity");
+					sb.append(" +description:fruity");
 					break;
 				case "dry":
-					sb.append("+description:dry");
+					sb.append(" +description:dry");
 					break;
 				case "berry":
-					sb.append("+description:berry");
+					sb.append(" +description:berry");
 					break;
 				case "cherry":
-					sb.append("+description:cherry");
+					sb.append(" +description:cherry");
 					break;
 				case "citrus":
-					sb.append("+description:citrus");
+					sb.append(" +description:citrus");
 					break;
 				case "smooth":
-					sb.append("+description:smoth");
+					sb.append(" +description:smoth");
 					break;
 				case "rough":
-					sb.append("+description:rough");
+					sb.append(" +description:rough");
 					break;
 				default:
 					break;
