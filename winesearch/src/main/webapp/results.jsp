@@ -7,7 +7,7 @@
 <%@page import="org.apache.lucene.document.Document"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="java.util.HashMap"%>
-<%@page import="org.apache.commons.lang3.StringUtils"%>
+
 
 <html>
 <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
@@ -45,7 +45,7 @@
         out.print("<br/>");
         out.print("<h2>");
         for(String wordneu : result.get("title").split(" ")){
-        	if(query.contains(StringUtils.lowerCase(wordneu).replace("(","").replace(")",""))){
+        	if(query.contains(wordneu.toLowerCase().replace("(","").replace(")",""))){
         		out.print("<b><mark>" + wordneu + "</mark></b>");
         	}
         	else{
@@ -61,7 +61,7 @@
         out.print("</br>");
         for(String word : result.get("description").split(" ")){
         	
-        	if(query.contains(StringUtils.lowerCase(word).replace(",","").replace(".",""))){
+        	if(query.contains(word.toLowerCase().replace(",","").replace(".",""))){
         		out.print("<b><mark>" + word + "</mark></b>");
         	}
         	else{
@@ -133,12 +133,10 @@
 <script src="https://code.jquery.com/jquery-1.10.2.js"
 	type="text/javascript"></script>
 <script type="text/javascript">
-
 $(document).ready(function() {
     $('#EvalForm').submit(function(event) {
     var values = $('#EvalForm').serialize().concat("&query=<%=queryString%>");
     console.log(values);
-
     $.ajax({
      type: 'POST',
      url: 'EvaluationServlet',
