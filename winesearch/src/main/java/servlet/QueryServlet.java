@@ -52,6 +52,7 @@ public class QueryServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private int numOfResults = 0;
 	private int best = 0;
+	private int price = 0;
     /**
      * Default constructor. 
      */
@@ -88,6 +89,11 @@ public class QueryServlet extends HttpServlet {
 		}
 		
 		Map <String, Integer> map = setupRequest(request, query, eval);
+		if(price == 1) {
+			sortcheap(resultsList);
+		} else if (price==2) {
+			sortpricey(resultsList);
+		}
 		if(best == 1 && eval == true) {
 			sortbest(resultsList);
 		}
@@ -246,11 +252,12 @@ public class QueryServlet extends HttpServlet {
 	}
 	
 	private String check(String query) {	//Vorverarbeitungsfunktion fuer Queries		
-		best = 0;
+		checkprice(query);
 		String queryneu = checkvintage(query);
 		queryneu = checktype(queryneu);
 		queryneu = checkbest(queryneu);
 		queryneu = checkcountry(queryneu);
+		queryneu = checktaste(queryneu);
 		
 		System.out.println(query +" (original)");	
 		System.out.println(queryneu+" (neu)");
@@ -502,15 +509,31 @@ public class QueryServlet extends HttpServlet {
 		
 		return sb.toString();
 	}
+	
+	//checkt ob teuer/billig
+	private void checkprice (String query) {
+		price = 0;
+		String queryarr[] = query.split(" ");
+		for (int i=0; i<queryarr.length; i++) {
+			if (queryarr[i].contains("cheap")) {
+				price = 1;
+				break;
+			} else if (queryarr[i].contains("expensive") || queryarr[i].contains("pricey")) {
+				price = 2;
+				break;
+			}
+		}
+	}
 		
 		
-		//best
+		//prüft ob best vorkommt
 	
 	private String checkbest (String query) {
+		best = 0;
 		StringBuilder sb = new StringBuilder();
 		String queryarr[] = query.split(" ");
 		for (int i=0; i<queryarr.length; i++) {
-			if (queryarr[i].equals("best")) {
+			if (queryarr[i].equals("best") || queryarr[i].equals("good")) {
 			best = 1;
 		} else {
 			sb.append(queryarr[i]+" ");
@@ -542,15 +565,34 @@ public class QueryServlet extends HttpServlet {
 		} while (tausch == 1);
 	}
 	
+	//sortiert nach Punkten
+	
 	private void sortbest(ArrayList<Document> resultList) {
 		int tausch = 0;
+		double c = 0.0;
+		double d = 0.0;
 		do {
 			 tausch = 0;
 		try {
 			for (int i= 0; i<=100;i++){
 				int a = Integer.parseInt(resultList.get(i).get("points"));
 				int b = Integer.parseInt(resultList.get(i+1).get("points"));
-				if(a<b) {
+				try {
+					 c = Double.parseDouble(resultList.get(i).get("price"));
+					} catch (NumberFormatException nfe) {
+						c = 0.0;
+					}
+					try {
+					 d = Double.parseDouble(resultList.get(i+1).get("price"));
+					} catch (NumberFormatException nfe) {
+						d = 0.0;
+					}
+				
+					if (price == 1 && a<b && c<d){
+						
+					} else if (price == 2 && a<b && c>d) {
+						
+					} else if (a<b) {
 					Document temp = resultList.get(i);
 					resultList.set(i, resultList.get(i+1));
 					resultList.set((i+1), temp);
@@ -566,6 +608,78 @@ public class QueryServlet extends HttpServlet {
 	} while (tausch == 1);
 	
 	}  
+	
+	//sortiert nach preiswert
+	
+	private void sortcheap(ArrayList<Document> resultList) {
+		int tausch = 0;
+		double a = 0.0;
+		double b = 0.0;
+		do {
+			 tausch = 0;
+		try {
+			for (int i= 0; i<=100;i++){
+				try {
+				 a = Double.parseDouble(resultList.get(i).get("price"));
+				} catch (NumberFormatException nfe) {
+					a = 0.0;
+				}
+				try {
+				 b = Double.parseDouble(resultList.get(i+1).get("price"));
+				} catch (NumberFormatException nfe) {
+					b = 0.0;
+				}
+				if(a>b) {
+					Document temp = resultList.get(i);
+					resultList.set(i, resultList.get(i+1));
+					resultList.set((i+1), temp);
+					tausch = 1;
+						}
+				}
+			
+		} catch (IndexOutOfBoundsException ioe) {
+			
+		} catch (NullPointerException npe) {
+			
+		}
+	} while (tausch == 1);
+	}
+	
+	//sortiert nach teuer
+	
+	private void sortpricey(ArrayList<Document> resultList) {
+		int tausch = 0;
+		double a = 0.0;
+		double b = 0.0;
+		do {
+			 tausch = 0;
+		try {
+			for (int i= 0; i<=100;i++){
+				try {
+					 a = Double.parseDouble(resultList.get(i).get("price"));
+					} catch (NumberFormatException nfe) {
+						a = 0.0;
+					}
+					try {
+					 b = Double.parseDouble(resultList.get(i+1).get("price"));
+					} catch (NumberFormatException nfe) {
+						b = 0.0;
+					}
+				if(a<b) {
+					Document temp = resultList.get(i);
+					resultList.set(i, resultList.get(i+1));
+					resultList.set((i+1), temp);
+					tausch = 1;
+						}
+				}
+			
+		} catch (IndexOutOfBoundsException ioe) {
+			
+		} catch (NullPointerException npe) {
+			
+		;}
+	} while (tausch == 1);
+	}
 	  
 
 }
