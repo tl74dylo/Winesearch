@@ -8,5 +8,9 @@
                     value=1><br> 
 		<input type="submit" value="Submit" />
 	</form>
+	
+	<h3>Indexing:</h3>
+	<form action="IndexServlet" method="post"><input type="submit" value="Index files" name="index" size="30" />
+	<output="text">Note: this may take a while.</output>
 </body>
 </html>
