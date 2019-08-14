@@ -96,6 +96,8 @@ public class QueryServlet extends HttpServlet {
 		}
 		if(best == 1 && eval == true) {
 			sortbest(resultsList);
+		} else if (best == 2 && eval == true) {
+			sortworst(resultsList);
 		}
 		sort(resultsList, map);
 		request.setAttribute("results", resultsList);
@@ -665,6 +667,8 @@ public class QueryServlet extends HttpServlet {
 		for (int i=0; i<queryarr.length; i++) {
 			if (queryarr[i].equals("best") || queryarr[i].equals("good")) {
 			best = 1;
+		} else if (queryarr[i].equals("worst") || queryarr[i].equals("bad")) {
+			best = 2;
 		} else {
 			sb.append(queryarr[i]+" ");
 			}
@@ -738,6 +742,49 @@ public class QueryServlet extends HttpServlet {
 	} while (tausch == 1);
 	
 	}  
+	
+	//sortiert nach schlechtem Wein
+	private void sortworst(ArrayList<Document> resultList) {
+		int tausch = 0;
+		double c = 0.0;
+		double d = 0.0;
+		do {
+			 tausch = 0;
+		try {
+			for (int i= 0; i<=100;i++){
+				int a = Integer.parseInt(resultList.get(i).get("points"));
+				int b = Integer.parseInt(resultList.get(i+1).get("points"));
+				try {
+					 c = Double.parseDouble(resultList.get(i).get("price"));
+					} catch (NumberFormatException nfe) {
+						c = 0.0;
+					}
+					try {
+					 d = Double.parseDouble(resultList.get(i+1).get("price"));
+					} catch (NumberFormatException nfe) {
+						d = 0.0;
+					}
+				
+					if (price == 1 && a>b && c<d){
+						
+					} else if (price == 2 && a>b && c>d) {
+						
+					} else if (a>b) {
+					Document temp = resultList.get(i);
+					resultList.set(i, resultList.get(i+1));
+					resultList.set((i+1), temp);
+					tausch = 1;
+						}
+				}
+			
+		} catch (IndexOutOfBoundsException ioe) {
+			
+		} catch (NullPointerException npe) {
+			
+		;}
+	} while (tausch == 1);
+	
+	}
 	
 	//sortiert nach preiswert
 	
