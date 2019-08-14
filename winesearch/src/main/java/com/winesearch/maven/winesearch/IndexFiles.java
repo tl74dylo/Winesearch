@@ -51,9 +51,6 @@ public class IndexFiles {
       if ("-index".equals(args[i])) {
         indexPath = args[i+1];
         i++;
-      } else if ("-docs".equals(args[i])) {
-        docsPath = args[i+1];
-        i++;
       } else if ("-update".equals(args[i])) {
         create = false;
       }
