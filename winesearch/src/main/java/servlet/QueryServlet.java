@@ -123,9 +123,28 @@ public class QueryServlet extends HttpServlet {
 		   IndexSearcher searcher = new IndexSearcher(reader);
 		   Analyzer analyzer = new StandardAnalyzer();
 		   
-		   // Fuehre Query aus
+		    // Fuehre Query aus
 		   MultiFieldQueryParser parser = new MultiFieldQueryParser(new String[] {"id","country", "description", "designation", "points", "price", "province", "taster", "title", "variety", "winery"}, analyzer);
-		   Query query = parser.parse(queryString);
+		  
+		   
+		   //score testing
+		   String [] array = queryString.split(" ");
+		   BooleanQuery.Builder test = new BooleanQuery.Builder();
+		   
+		   for (int g = 0; g<array.length; g++) {
+			   if (array[g].equals("wine") || array[g].equals("vintage") || array[g].equals("wines") || array[g].equals("fine") || array[g].equals("delicious")) {
+				   Query query1 = parser.parse(array[g]);
+				   test.add(new BoostQuery(query1, 0.1f), BooleanClause.Occur.SHOULD);
+			   } else if (array[g].equals("organic")) {
+				   Query query3 = parser.parse(array[g]);
+				   test.add(new BoostQuery(query3, 2.0f), BooleanClause.Occur.SHOULD);
+		   		} else {
+				   Query query4 = parser.parse(array[g]);
+				   test.add(new BoostQuery(query4, 1.0f), BooleanClause.Occur.SHOULD);
+			   }
+		   }
+		   
+		   BooleanQuery query = test.build();
 		   
 		   // Sammle die Dokumente
 		   TopDocs results = searcher.search(query, 50);
@@ -256,6 +275,7 @@ public class QueryServlet extends HttpServlet {
 	private String check(String query) {	//Vorverarbeitungsfunktion fuer Queries		
 		checkprice(query);
 		String queryneu = checkfrom(query);
+		queryneu = checkbio(queryneu);
 		queryneu = checkvintage(queryneu);
 		queryneu = checktype(queryneu);
 		queryneu = checkbest(queryneu);
@@ -591,14 +611,29 @@ public class QueryServlet extends HttpServlet {
 				case "meat":
 					sb.append(" +description:meat");
 					break;
-				case "organic":
-					sb.append(" +description:organic");
-					break;
 				default:
 					break;
 						
 			}
 		}
+		return sb.toString();
+	}
+	
+	//checkt ob bio gefordert
+	
+	private String checkbio(String query) {
+		int bio = 0;
+		String [] queryarr = query.split(" ");
+		StringBuilder sb = new StringBuilder();
+		for (int i=0; i<queryarr.length; i++) {
+			if (bio == 0 && queryarr[i].equals("bio")) {
+				sb.append("organic ");
+			} else {
+				sb.append(queryarr[i]+" ");
+				
+			}
+		}
+		
 		return sb.toString();
 	}
 	
