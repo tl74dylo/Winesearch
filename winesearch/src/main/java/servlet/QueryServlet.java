@@ -274,15 +274,15 @@ public class QueryServlet extends HttpServlet {
 	
 	private String check(String query) {	//Vorverarbeitungsfunktion fuer Queries		
 		checkprice(query);
-		String queryneu = checkfrom(query);
-		queryneu = checkbio(queryneu);
-		queryneu = checkvintage(queryneu);
-		queryneu = checktype(queryneu);
-		queryneu = checkbest(queryneu);
-		queryneu = checkcountry(queryneu);
-		queryneu = checktaste(queryneu);
-		queryneu = checkfood(queryneu);
-		queryneu = checkrecommend(queryneu);
+		String queryneu = checkfrom(query).trim();
+		queryneu = checkbio(queryneu).trim();
+		queryneu = checkvintage(queryneu).trim();
+		queryneu = checktype(queryneu).trim();
+		queryneu = checkbest(queryneu).trim();
+		queryneu = checkcountry(queryneu).trim();
+		queryneu = checktaste(queryneu).trim();
+		queryneu = checkfood(queryneu).trim();
+		queryneu = checkrecommend(queryneu).trim();
 		
 		System.out.println(query +" (original)");	
 		System.out.println(queryneu+" (neu)");
