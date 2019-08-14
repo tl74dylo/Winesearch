@@ -8,8 +8,44 @@ $sudo apt-get install upgrade
 $sudo apt autoremove
 $java -version should say something like jdk version "1.8.0_***"
 $mvn -version should say something like Apache Maven 3.6.*
+_______________________________________________________________________________
 
-Copy the WAR file to CATALINA_HOME/webapps, e.g., /var/lib/tomcat9/webapps.
-$sudo mvn tomcat:deploy
+Go to CATALINA_HOME/config/tomcat-users.xml
+Overwrite the whole file with 
+
+<?xml version="1.0" encoding="UTF-8"?>
+<tomcat-users version="1.0" xmlns="http://tomcat.apache.org/xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://tomcat.apache.org/xml tomcat-users.xsd">
+<tomcat-users>
+
+	<role rolename="manager-gui"/>
+	<role rolename="manager-script"/>
+	<user username="admin" password="password" roles="manager-gui,manager-script" />
+
+</tomcat-users>
+_______________________________________________________________________________
+
+In %MAVEN_PATH%/conf/settings.xml, add:
+
+     	<server>
+			<id>TomcatServer</id>
+			<username>admin</username>
+			<password>password</password>
+		</server>
+_______________________________________________________________________________
+
+Enter the directory /Winesearch-Master/winesearch, open terminal there and open the pom.xml file
+In the following part of the pom.xml, change "jar" to "war"
+
+  <groupId>com.winesearch.maven</groupId>
+  <artifactId>winesearch</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+_______________________________________________________________________________
+
+Save and close, then enter the terminal opened before
+$sudo mvn clean install
+This should create a WAR file in /Winesearch-master/winesearch/target
+Copy that file to CATALINA_HOME/webapps, e.g., /var/lib/tomcat9/webapps.
+$sudo mvn tomcat7:deploy
 In the address area of the browser, type http://localhost:8080/winesearch/index.jsp and submit that address to the browser.
 The output of the JSP page will be displayed.
