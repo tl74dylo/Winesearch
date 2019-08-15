@@ -412,6 +412,17 @@
     "narrative":"Relevant documents include reviews which suggest a wine for a everyday / informal occassion."
     
 },
+	
+{
+    "topic_id":"36",
+    
+    "query":"dry rosé",
+    
+    "description":"Which dry rosé wines were tested?",
+    
+    "narrative":"Relevant documents include reviews which rate dry rosé wines"
+    
+}
 
 ]
 
