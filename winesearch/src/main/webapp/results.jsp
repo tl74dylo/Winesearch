@@ -46,7 +46,7 @@
         out.print("<h2>");
         for(String wordneu : result.get("title").split(" ")){
         	if(query.contains(wordneu.toLowerCase().replace("(","").replace(")",""))){
-        		out.print("<b><mark>" + wordneu + "</mark></b>");
+        		out.print("<b><i>" + wordneu + "</i></b>");
         	}
         	else{
         		out.print(wordneu);
@@ -62,7 +62,7 @@
         for(String word : result.get("description").split(" ")){
         	
         	if(query.contains(word.toLowerCase().replace(",","").replace(".",""))){
-        		out.print("<b><mark>" + word + "</mark></b>");
+        		out.print("<b>" + word + "</b>");
         	}
         	else{
         		out.print(word);
