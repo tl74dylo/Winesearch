@@ -1,4 +1,4 @@
 # Winesearch
 Information Retrieval Search Engine Project
 
-Unser Programmcode ist im Ordner "winesearch".
+Die finale Abgabe befindet sich im Branch "abgabe". Bitte dort die readme lesen.
