@@ -8,4 +8,6 @@ betrachtet werden.
 
 Der Programmcode befindet sich im Ordner "winesearch".
 
-Im Ordner "Evaluierung" befinden sich die Json Dateien für die durchgeführte Bewertung.
+Im Ordner "Evaluierung" befinden sich die Json Dateien für die durchgeführte Bewertung. Um diese ins Projekt einzuspielen, einfach in den Ordner kopieren, in dem das Projekt läuft. Achtung vor doppelten Dokumenten!
+
+Der Projektbericht liegt direkt ganz oben.
