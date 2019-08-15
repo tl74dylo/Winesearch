@@ -10,4 +10,9 @@ Der Programmcode befindet sich im Ordner "winesearch".
 
 Im Ordner "Evaluierung" befinden sich die Json Dateien für die durchgeführte Bewertung. Um diese ins Projekt einzuspielen, einfach in den Ordner kopieren, in dem das Projekt läuft. Achtung vor doppelten Dokumenten!
 
+Die zu indexierenden Daten (winemag-data-130k-v2.csv) muss ebenfalls in den Ordner, in dem das Programm läuft, um den Index zu erstellen.
+
 Der Projektbericht liegt direkt ganz oben.
+
+
+Bei Fragen und Problemen stehen wir selbstverständlich geistig sowie auch physisch gerne zur Verfügung.
