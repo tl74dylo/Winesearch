@@ -12,7 +12,7 @@ Im Ordner "Evaluierung" befinden sich die Json Dateien für die durchgeführte B
 
 Die zu indexierenden Daten (winemag-data-130k-v2.csv) muss ebenfalls in den Ordner, in dem das Programm läuft, um den Index zu erstellen.
 
-Der Projektbericht liegt direkt ganz oben.
+Der Projektbericht heißt "Bericht_Final_WineSearch_IR.pdf.
 
 
 Bei Fragen und Problemen stehen wir selbstverständlich geistig sowie auch physisch gerne zur Verfügung.
