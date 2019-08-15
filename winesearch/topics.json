@@ -1,4 +1,4 @@
-﻿[
+[
 
 {
 	"topic_id":"1",
@@ -127,7 +127,7 @@
 
 	"description":"Which berry flavoured red wines can be found?",
 
-	"narrative":"Relevant documents are those with berry flavoured red wines."
+	"narrative":"Relevant documents are those with berry flavoured red wines, where either the wine does not have more than one other flavour or the berry flavour is very strong."
 
 },
 
@@ -137,9 +137,9 @@
 
 	"query":"weak wines",
 
-	"description":"What are wines with only a small amount of alcohol?",
+	"description":"What are wines with only a weak flavour?",
 
-	"narrative":"Relevant documents include wines with a low alcohol content."
+	"narrative":"Relevant documents include wines with a light, not overbearing flavour or general weak aromas. Does not include wines with only a weak smell or finish."
 
 },
 
@@ -151,7 +151,7 @@
 
 	"description":"What are wines with a great amount of alcohol?",
 
-	"narrative":"Relevant documents include wines with a high alcohol content."
+	"narrative":"Relevant documents include wines with a high alcohol content, typically 13% and above. Just strong alcohol taste is not enough. Source: https://www.masterclass.com/articles/learn-about-alcohol-content-in-wine-highest-to-lowest-abv-wines#wines-with-the-highest-alcohol-content"
 
 },
 
@@ -175,7 +175,7 @@
 
 	"description":"What are some french wines?",
 
-	"narrative":"Relevant documents include wines from France."
+	"narrative":"Relevant documents include only wines from France."
 
 },
 
@@ -187,7 +187,7 @@
 
 	"description":"What are some italian wines?",
 
-	"narrative":"Relevant documents include wines from Italy."
+	"narrative":"Relevant documents include only wines from Italy."
 
 },
 
@@ -199,7 +199,7 @@
 
 	"description":"What are some spanish wines?",
 
-	"narrative":"Relevant documents include wines from Spain."
+	"narrative":"Relevant documents include only wines from Spain."
 
 },
 
@@ -211,7 +211,7 @@
 
    	"description":"What are some german wines?",
 
-   	"narrative":"Relevant documents include wines from Germany."
+   	"narrative":"Relevant documents include only wines from Germany."
 
 },
 
@@ -223,7 +223,7 @@
 
 	"description":"What are some american wines?",
 
-	"narrative":"Relevant documents include wines from the USA."
+	"narrative":"Relevant documents include only wines from the USA."
 
 },
 {
@@ -246,7 +246,7 @@
 
 	"description":"Which Cabernet Sauvigion wines are relatively cheap?",
 
-	"narrative":"Relevant documents include wines made of the Cabernet Sauvignon grapes that are less than 15$."
+	"narrative":"Relevant documents include wines made of the Cabernet Sauvignon grapes that are less than or exactly  15$."
 
 },
 
@@ -258,7 +258,7 @@
 
 	"description":"What are some wines that have good reviews and cost more than 20$?",
 
-	"narrative":"Relevant documents include wines that received good reviews and cost more than 20$."
+	"narrative":"Relevant documents include wines that received good reviews and cost more than or exactly 20$. Since 'good' is pretty broad, considered the ratings, the decisive factor for this criteria is the review itself."
 
 },
 
@@ -266,11 +266,11 @@
 
 	"topic_id":"23",
 
-	"query":"half dry wine",
+	"query":"semi-dry wine",
 
-	"description":"What are some half dry wines?",
+	"description":"What are some semi-dry wines?",
 
-	"narrative":"Relevant documents include wines with the property of being 'half dry'."
+	"narrative":"Relevant documents include wines with the property of being 'semi-dry'."
 
 },
 
@@ -278,11 +278,11 @@
 
 	"topic_id":"24",
 
-	"query":"riesling under 10$",
+	"query":"riesling under 20$",
 
-	"description":"What are some Riesling wines that cost less than 10$?",
+	"description":"What are some Riesling wines that cost less than 20$?",
 
-	"narrative":"Relevant documents include white wines made from the Riesling grape for strictly less than 10$."
+	"narrative":"Relevant documents include white wines made from the Riesling grape for strictly less than 20$."
 
 },
 
@@ -294,7 +294,7 @@
 
 	"description":"What are some spanish wines made with the Tempranillo berry?",
 
-	"narrative":"Relevant documents include wines made with the Tempranillo grape in Spain."
+	"narrative":"Relevant documents include wines made with the Tempranillo grape in Spain. Includes also blends, since the tempranillo part ist still made with tempranillo berries."
 
 },
 
@@ -315,11 +315,11 @@
 
 	"topic_id":"27",
 
-	"query":"wine that goes well with hard cheese",
+	"query":"wine that goes well with cheese",
 
-	"description":"What are some wines known for going well with eating hard cheese?",
+	"description":"What are some wines known for going well with eating cheese?",
 
-	"narrative":"Relevant documents include wines that are supposed to go well with hard cheese."
+	"narrative":"Relevant documents include wines that are supposed to go well with cheese."
 
 },
 
@@ -331,7 +331,7 @@
 
 	"description":"What are some wines that have a citrus note?",
 
-	"narrative":"Relevant documents include wines that in any way are associated with having a citrus note."
+	"narrative":"Relevant documents include wines that in any way are associated with having a citrus note in their flavours."
 
 },
 
@@ -343,7 +343,7 @@
 
 	"description":"What are some wines with a smooth texture?",
 
-	"narrative":"Relevant documents include wines with the property of 'having a smooth texture'."
+	"narrative":"Relevant documents include wines with a smooth texture."
 
 },
 
@@ -361,60 +361,27 @@
 {
     "topic_id":"31",
     
-    "query":"organic",
+    "query":"red organic",
     
-    "description":"Which certified organic wines where tested?",
+    "description":"Which red organic wines where tested?",
     
-    "narrative":"Relevant documents include reviews which rate certified organic wine. This also includes public and private certification, e.g. demeter (Germany), Bio Hellas (Greece)"
+    "narrative":"Relevant documents include reviews which rate red organic wine."
     
 },
 
 {
     "topic_id":"32",
     
-    "query":"dry red organic",
+    "query":"cheap organic",
     
-    "description":"Which dry red certified organic wines where tested?",
+    "description":"Which cheap / affordable organic wines where tested?",
     
-    "narrative":"Relevant documents include reviews which rate dry red certified organic wine. This also includes public and private certification, e.g. demeter (Germany), Bio Hellas (Greece)"
+    "narrative":"Relevant documents include reviews which rate organic wine with a price up to 10$."
     
 },
 
 {
     "topic_id":"33",
-    
-    "query":"cheap organic",
-    
-    "description":"Which cheap / affordable organic wines where tested?",
-    
-    "narrative":"Relevant documents include reviews which rate organic wine with a price up to 10$. This also includes public and private certification, e.g. demeter (Germany), Bio Hellas (Greece)"
-    
-},
-
-{
-    "topic_id":"34",
-    
-    "query":"organic white wine",
-    
-    "description":"Which white certified organic wines where tested?",
-    
-    "narrative":"Relevant documents include reviews which rate organic wine with a price up to 10$. This also includes public and private certification, e.g. demeter (Germany), Bio Hellas (Greece)"
-    
-},
-
-{
-    "topic_id":"35",
-    
-    "query":"dry rosé",
-    
-    "description":"Which dry rosé wines were tested?",
-    
-    "narrative":"Relevant documents include reviews which rate rosé wines"
-    
-},
-
-{
-    "topic_id":"36",
     
     "query":"smooth fruity wines",
     
@@ -425,18 +392,18 @@
 },
 
 {
-    "topic_id":"37",
+    "topic_id":"34",
     
     "query":"pricey red wines",
     
     "description":"Which are the most expensive tested red wines?",
     
-    "narrative":"Relevant documents include reviews which rate red wines with the highest price."
+    "narrative":"Relevant documents include reviews which rate red wines for 30$ or more."
     
 },
 
 {
-    "topic_id":"38",
+    "topic_id":"35",
     
     "query":"everyday wine",
     
@@ -445,17 +412,6 @@
     "narrative":"Relevant documents include reviews which suggest a wine for a everyday / informal occassion."
     
 },
-
-{
-    "topic_id":"39",
-    
-    "query":"venison",
-    
-    "description":"Which wines are good to have with venison",
-    
-    "narrative":"Relevant documents include reviews which suggest to drink this wine when eating vanison"
-    
-}
 
 ]
 
