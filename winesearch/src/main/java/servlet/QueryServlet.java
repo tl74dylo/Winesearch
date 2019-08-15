@@ -29,6 +29,9 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;	//MultiFieldQueryParser importiert
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.BoostQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -53,6 +56,7 @@ public class QueryServlet extends HttpServlet {
 	private int numOfResults = 0;
 	private int best = 0;
 	private int price = 0;
+
     /**
      * Default constructor. 
      */
@@ -123,9 +127,11 @@ public class QueryServlet extends HttpServlet {
 		   IndexSearcher searcher = new IndexSearcher(reader);
 		   Analyzer analyzer = new StandardAnalyzer();
 		   
-		    // Fuehre Query aus
+		   
+		   
+		   // Fuehre Query aus
 		   MultiFieldQueryParser parser = new MultiFieldQueryParser(new String[] {"id","country", "description", "designation", "points", "price", "province", "taster", "title", "variety", "winery"}, analyzer);
-		  
+		  //Query query = parser.parse(queryString);
 		   
 		   //score testing
 		   String [] array = queryString.split(" ");
@@ -139,6 +145,7 @@ public class QueryServlet extends HttpServlet {
 				   Query query3 = parser.parse(array[g]);
 				   test.add(new BoostQuery(query3, 2.0f), BooleanClause.Occur.SHOULD);
 		   		} else {
+		   			
 				   Query query4 = parser.parse(array[g]);
 				   test.add(new BoostQuery(query4, 1.0f), BooleanClause.Occur.SHOULD);
 			   }
@@ -146,8 +153,9 @@ public class QueryServlet extends HttpServlet {
 		   
 		   BooleanQuery query = test.build();
 		   
+		   
 		   // Sammle die Dokumente
-		   TopDocs results = searcher.search(query, 50);
+		   TopDocs results = searcher.search(query, 500);
 		   ScoreDoc[] hits = results.scoreDocs;
 		   numOfResults = Math.toIntExact(results.totalHits.value);
 		   //writer.println(numTotalHits + " passende Ergebnisse");
@@ -155,9 +163,8 @@ public class QueryServlet extends HttpServlet {
 		  
 		   
 		   // Durchlaufe Ergebnis (nur die ersten 50)
-		   
-		int count = (hits.length >= 50) ? 50 : hits.length;
-		   for (int i= 0; i< count; i++) {
+		   try {
+		   for (int i= 0; i<50; i++) {
 		   Document doc = searcher.doc(hits[i].doc);
 		         String path = doc.get("id");
 		         if (path != null) {
@@ -175,8 +182,11 @@ public class QueryServlet extends HttpServlet {
 		           System.out.println((i+1) + ". " + "No path for this document");
 		         }
 		   }
-
 		   
+		   } catch (ArrayIndexOutOfBoundsException aoe) {
+			   System.out.println("Keine weiteren Ergebnisse");
+		   }
+
 		   return resultsList;
 		   
 		  }
@@ -184,7 +194,7 @@ public class QueryServlet extends HttpServlet {
 	
 	/* setupRequest
 	 * - setzt Attribute fuer request 
-	 * - abhÃƒÂ¤ngig ob Evaluierungsmodus aktiv ist 
+	 * - abhÃ¤ngig ob Evaluierungsmodus aktiv ist 
 	 * - liest vorhandenes JSON Evaluierungsfile fuer Query aus, wenn vorhanden
 	 */
 	
@@ -272,9 +282,10 @@ public class QueryServlet extends HttpServlet {
 		}
 	}
 	
-	private String check(String query) {	//Vorverarbeitungsfunktion fuer Queries		
+	private String check(String query) {	//Vorverarbeitungsfunktion fuer Queries
 		checkprice(query);
 		String queryneu = checkfrom(query).trim();
+		queryneu = checkstrong(queryneu).trim();
 		queryneu = checkbio(queryneu).trim();
 		queryneu = checkvintage(queryneu).trim();
 		queryneu = checktype(queryneu).trim();
@@ -283,12 +294,15 @@ public class QueryServlet extends HttpServlet {
 		queryneu = checktaste(queryneu).trim();
 		queryneu = checkfood(queryneu).trim();
 		queryneu = checkrecommend(queryneu).trim();
+		queryneu = checkstopword(queryneu).trim();
 		
 		System.out.println(query +" (original)");	
 		System.out.println(queryneu+" (neu)");
 		return queryneu;
 		
 	}
+	
+	//checkt eine spezifische Formulierung für den Jahrgang
 	
 	private String checkfrom(String query) {
 		String [] queryarr = query.split(" ");
@@ -317,6 +331,39 @@ public class QueryServlet extends HttpServlet {
 		return sb.toString();
 	}
 	
+	//removes stopwords
+	
+	private String checkstopword(String query) {
+		String [] queryarr = query.split(" ");
+		StringBuilder sb = new StringBuilder();
+		for (int i=0; i<queryarr.length; i++) {
+			if (queryarr[i].equals("to") || queryarr[i].equals("from") || queryarr[i].equals("for")) {
+				
+			} else {
+				sb.append(queryarr[i]+" ");
+			}
+		}
+			
+		return sb.toString();
+	}
+	
+	//checkt bio
+	
+	private String checkbio(String query) {
+		int bio = 0;
+		String [] queryarr = query.split(" ");
+		StringBuilder sb = new StringBuilder();
+		for (int i=0; i<queryarr.length; i++) {
+			if (bio == 0 && queryarr[i].equals("bio")) {
+				sb.append(" organic");
+			} else {
+					sb.append(queryarr[i]+" ");
+			}
+		}
+		
+		return sb.toString();
+	}
+	
 	//Vorverarbeitung fuer recommendations
 	
 	private String checkrecommend(String query) {
@@ -328,70 +375,93 @@ public class QueryServlet extends HttpServlet {
 		StringBuilder sb = new StringBuilder();
 		sb.append(query);
 		for (int i=0; i<queryarr.length; i++) {
-			if(recommendations == 0 && queryarr[i].contains("recommend")) {
-				sb.append(" description:'drin from' description:'drin in' description:'drink now' description:'drink best after'"+" "+jahr);
+			if(recommendations == 0 && (queryarr[i].contains("recommend") || queryarr[i].contains("recommendations") || queryarr[i].contains("recommendation"))) {
+				sb.append(" description:'drink from' description:'drink in' description:'drink now' description:'drink best after'"+" "+jahr);
 				recommendations = 1;
 			}
 		}
 		return sb.toString();
 	}
 	
-		//checks if vintage is requested
+	//checkt ob vintage explizit gefordert ist
+		
 	private String checkvintage(String query) {
 		String [] queryarr = query.split(" ");
 		StringBuilder sb = new StringBuilder();
-			int vintage = 0;					//Kenngroesse fuer doppelvorkommen von woertern
-				if (queryarr.length>1) {		//iteriert Ã¼ber jedes Wort der Query, falls query laenger als 1 (da Vintage ein Jahr braucht)
-					for (int j = 0; j<queryarr.length; j++) {
-					/*if (queryarr[queryarr.length-1].equals("vintage") && vintage == 0){	//check ob das letzte Wort == vintage und Kenngroesse noch 0
-						for (int k = 0; k<(queryarr.length-1); k++) {
-						
-							try {
-								int zahl = Integer.parseInt(queryarr[k]);	//falls wort == zahl, erfolg
-								if (zahl > 1900 && zahl < 2100) {	
-								sb.append("title:");						//falls im Zeitraum, neue Query einfuegen
-								sb.append(queryarr[k]+" ");
-							}
-							} catch (NumberFormatException nfe) {			//falls keine Zahl, wort zur neuen Query hinzufuegen
-								sb.append(queryarr[k]+" ");
-							}
+		//checks if vintage is requested
+				int vintage = 0;					//Kenngroesse fuer doppelvorkommen von woertern
+					if (queryarr.length>1) {		//iteriert über jedes Wort der Query, falls query laenger als 1 (da Vintage ein Jahr braucht)
+						for (int j = 0; j<queryarr.length; j++) {
+						/*if (queryarr[queryarr.length-1].equals("vintage") && vintage == 0){	//check ob das letzte Wort == vintage und Kenngroesse noch 0
+							for (int k = 0; k<(queryarr.length-1); k++) {
 								
-						}
-						vintage = 1;
-					} else */ if (vintage != 1 && queryarr[j].equals("vintage")) {
-						for (int l = 0; l<j; l++) {
-							try {
-								int zahl = Integer.parseInt(queryarr[l]);
-								if (zahl > 1900 && zahl < 2100) {
-								sb.append("title:");
-								sb.append(queryarr[l]+" ");
+								try {
+									int zahl = Integer.parseInt(queryarr[k]);	//falls wort == zahl, erfolg
+									if (zahl > 1900 && zahl < 2100) {	
+									sb.append("title:");						//falls im Zeitraum, neue Query einfuegen
+									sb.append(queryarr[k]+" ");
+									}
+								} catch (NumberFormatException nfe) {			//falls keine Zahl, wort zur neuen Query hinzufuegen
+									sb.append(queryarr[k]+" ");
 								}
-							} catch (NumberFormatException nfe) {
-								sb.append(queryarr[l]+" ");
+								
 							}
-						}
-						sb.append("vintage ");
-						for(int l = j+1; l<queryarr.length; l++) {
-							try {
-								int zahl = Integer.parseInt(queryarr[l]);
-								if (zahl > 1900 && zahl < 2100) {
+							vintage = 1;
+						} else */ if (vintage != 1 && queryarr[j].equals("vintage")) {
+							for (int l = 0; l<j; l++) {
+								try {
+									int zahl = Integer.parseInt(queryarr[l]);
+									if (zahl > 1900 && zahl < 2100) {
 									sb.append("title:");
 									sb.append(queryarr[l]+" ");
 									}
-							} catch (NumberFormatException nfe) {
-								sb.append(queryarr[l]+" ");
+								} catch (NumberFormatException nfe) {
+									sb.append(queryarr[l]+" ");
+								}
 							}
-						}
-						vintage = 1;
-						 }
-					
-					}
+							sb.append("vintage ");
+							for(int l = j+1; l<queryarr.length; l++) {
+								try {
+									int zahl = Integer.parseInt(queryarr[l]);
+									if (zahl > 1900 && zahl < 2100) {
+										sb.append("title:");
+										sb.append(queryarr[l]+" ");
+										}
+								} catch (NumberFormatException nfe) {
+									sb.append(queryarr[l]+" ");
+								}
+							}
+							vintage = 1;
+						  }
 						
-				} 
-				if (sb.length() == 0){
-				sb.append(query);
-				}
-				return sb.toString();
+						}
+						
+					} 
+					if (sb.length() == 0){
+					sb.append(query);
+					}
+					
+					return sb.toString();
+	}
+	
+	//checks if high alcohol is needed
+	
+	private String checkstrong(String query) {
+		int strong = 0;
+		StringBuilder sb = new StringBuilder();
+		String [] queryarr = query.split(" ");
+		for (int i=0; i<queryarr.length; i++) {
+			if (queryarr[i].equals("strong")) {
+				strong = 1;
+			} else {
+				sb.append(queryarr[i]+" ");
+			}
+		}
+		if (strong == 1) {
+			sb.append("+description:alcohol");
+		}
+		
+		return sb.toString();
 	}
 		
 		
@@ -609,8 +679,11 @@ public class QueryServlet extends HttpServlet {
 					sb.append(" +description:tempranillo");
 					break;
 				case "meat":
-					sb.append(" +description:meat");
+					sb.append(" +description:meat +description:meaty");
 					break;
+				/*case "organic":
+					sb.append(" description:organic");
+					break;*/
 				default:
 					break;
 						
@@ -619,25 +692,7 @@ public class QueryServlet extends HttpServlet {
 		return sb.toString();
 	}
 	
-	//checkt ob bio gefordert
-	
-	private String checkbio(String query) {
-		int bio = 0;
-		String [] queryarr = query.split(" ");
-		StringBuilder sb = new StringBuilder();
-		for (int i=0; i<queryarr.length; i++) {
-			if (bio == 0 && queryarr[i].equals("bio")) {
-				sb.append("organic ");
-			} else {
-				sb.append(queryarr[i]+" ");
-				
-			}
-		}
-		
-		return sb.toString();
-	}
-	
-	//prueft den Geschmack und die textur
+		//checktaste, prueft auch textur
 	
 	private String checktaste(String query) {
 		StringBuilder sb = new StringBuilder();
@@ -677,7 +732,8 @@ public class QueryServlet extends HttpServlet {
 		return sb.toString();
 	}
 	
-	//checkt ob teuer/billig
+	//checkt ob teuer, billig
+	
 	private void checkprice (String query) {
 		price = 0;
 		String queryarr[] = query.split(" ");
@@ -693,7 +749,7 @@ public class QueryServlet extends HttpServlet {
 	}
 		
 		
-		//prÃ¼ft ob best vorkommt
+		//prüft ob best vorkommt
 	
 	private String checkbest (String query) {
 		best = 0;
@@ -779,6 +835,7 @@ public class QueryServlet extends HttpServlet {
 	}  
 	
 	//sortiert nach schlechtem Wein
+	
 	private void sortworst(ArrayList<Document> resultList) {
 		int tausch = 0;
 		double c = 0.0;
@@ -892,6 +949,5 @@ public class QueryServlet extends HttpServlet {
 		;}
 	} while (tausch == 1);
 	}
-	  
 
 }
