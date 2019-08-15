@@ -194,7 +194,7 @@ public class QueryServlet extends HttpServlet {
 	
 	/* setupRequest
 	 * - setzt Attribute fuer request 
-	 * - abhängig ob Evaluierungsmodus aktiv ist 
+	 * - abhÃ¤ngig ob Evaluierungsmodus aktiv ist 
 	 * - liest vorhandenes JSON Evaluierungsfile fuer Query aus, wenn vorhanden
 	 */
 	
@@ -209,7 +209,7 @@ public class QueryServlet extends HttpServlet {
 			if(fileExists){
 				relevance = parseEvaluationList(fileName);
 				System.out.println("File exists");
-				request.setAttribute("control", relevance);
+				request.setAttribute("control", parseEvaluationList(fileName));
 			}
 		}
 		
@@ -302,7 +302,7 @@ public class QueryServlet extends HttpServlet {
 		
 	}
 	
-	//checkt eine spezifische Formulierung f�r den Jahrgang
+	//checkt eine spezifische Formulierung für den Jahrgang
 	
 	private String checkfrom(String query) {
 		String [] queryarr = query.split(" ");
@@ -390,7 +390,7 @@ public class QueryServlet extends HttpServlet {
 		StringBuilder sb = new StringBuilder();
 		//checks if vintage is requested
 				int vintage = 0;					//Kenngroesse fuer doppelvorkommen von woertern
-					if (queryarr.length>1) {		//iteriert �ber jedes Wort der Query, falls query laenger als 1 (da Vintage ein Jahr braucht)
+					if (queryarr.length>1) {		//iteriert über jedes Wort der Query, falls query laenger als 1 (da Vintage ein Jahr braucht)
 						for (int j = 0; j<queryarr.length; j++) {
 						/*if (queryarr[queryarr.length-1].equals("vintage") && vintage == 0){	//check ob das letzte Wort == vintage und Kenngroesse noch 0
 							for (int k = 0; k<(queryarr.length-1); k++) {
@@ -749,7 +749,7 @@ public class QueryServlet extends HttpServlet {
 	}
 		
 		
-		//pr�ft ob best vorkommt
+		//prüft ob best vorkommt
 	
 	private String checkbest (String query) {
 		best = 0;
