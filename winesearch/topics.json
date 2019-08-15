@@ -125,9 +125,9 @@
 
 	"query":"berry flavoured white wines",
 
-	"description":"Which berry flavoured red wines can be found?",
+	"description":"Which berry flavoured white wines can be found?",
 
-	"narrative":"Relevant documents are those with berry flavoured red wines, where either the wine does not have more than one other flavour or the berry flavour is very strong."
+	"narrative":"Relevant documents are those with berry flavoured white wines, where either the wine does not have more than one other flavour or the berry flavour is very strong."
 
 },
 
