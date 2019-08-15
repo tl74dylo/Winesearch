@@ -1,9 +1,0 @@
-In den Eintraegen 300-410 habe ich folgendes herausgefiltert:
-
-[drink with, perfect for, nice with]: 13-mal, bezieht sich auf Essen, das zu dem Wein passt bzw. umgekehrt
-[Drink now, ~next year, ~in a year, ~in two/three years, ~this summer, ~2022-2035 ready now, decades to come, drinking now, Best after (number of years, year number)]: 23-mal
-[breathe]: 3-mal
-[economic growth, irganically, biologically, biodynamic]: 2-mal
-[Best Buy]: 3-mal
-flavours werden haeufig genannt: sweet, dry, fruity etc.
-[palate, finish, aftertaste, end, close]: moeglichwerweise kombinierbar mit flavours?
