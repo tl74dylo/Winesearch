@@ -33,7 +33,7 @@ In %MAVEN_PATH%/conf/settings.xml, add:
 		</server>
 _______________________________________________________________________________
 
-Enter the directory /Winesearch-Master/winesearch, open terminal there and open the pom.xml file
+Enter the directory /Winesearch-abgabe/winesearch, open terminal there and open the pom.xml file
 In the following part of the pom.xml, change "jar" to "war"
 
   <groupId>com.winesearch.maven</groupId>
@@ -44,7 +44,7 @@ _______________________________________________________________________________
 
 Save and close, then enter the terminal opened before
 $sudo mvn clean install
-This should create a WAR file in /Winesearch-master/winesearch/target
+This should create a WAR file in /Winesearch-abgabe/winesearch/target
 Copy that file to CATALINA_HOME/webapps, e.g., /var/lib/tomcat9/webapps.
 $sudo mvn tomcat7:deploy
 In the address area of the browser, type http://localhost:8080/winesearch/index.jsp and submit that address to the browser.
