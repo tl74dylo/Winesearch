@@ -101,7 +101,7 @@ public class IndexFiles {
    }
  }
  
- static void indexCSV (final IndexWriter writer) throws IOException{
+ public static void indexCSV (final IndexWriter writer) throws IOException{
 	   CSVReader reader = new CSVReader(new FileReader("winemag-data-130k-v2.csv"));
     String [] nextLine;
     
